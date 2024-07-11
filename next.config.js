@@ -1,19 +1,7 @@
 //img and font src might need "data:", this approach is unsafe though
 // https://i.ytimg.com is apparently needed for adding an AI task
 // blob: on worker src might be okay since clerk is the only thing doing that https://security.stackexchange.com/questions/190331/is-allowing-blob-in-content-security-policy-a-risk
-const ContentSecurityPolicy = `
-  default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://va.vercel-scripts.com https://fcm.googleapis.com/v1/projects/fuxam-app-capacitor-test/messages:send https://www.googleapis.com/auth/firebase.messaging https://www.youtube.com/s/player/ https://www.youtube.com/s/player/dee96cfa/www-widgetapi.vflset/www-widgetapi.js https://www.youtube.com/iframe_api https://player.vimeo.com/api/player.js https://vercel.live https://js.intercomcdn.com https://vercel.live/_next-live/feedback/feed https://widget.intercom.io https://storage.googleapis.com/fuxam-web-7e071.appspot.com https://js.stripe.com https://www.loom.com https://sdk.birdeatsbug.com https://vimeo.com https://apis.google.com https://unpkg.com https://emerging-sheepdog-40.clerk.accounts.dev https://clerk.fuxam.app https://clerk.fuxam.app/:path* https://emerging-sheepdog-40.clerk.accounts.dev/:path* https://faye-us-east.stream-io-api.com https://faye-us-east.stream-io-api.com/:path* https://api.stream-io-api.com https://api.stream-io-api.com/:path* https://accounts.google.com https://accounts.google.com/:path* https://www.googleapis.com https://www.googleapis.com/:path* wss://faye-us-east.stream-io-api.com wss://faye-us-east.stream-io-api.com/:path* wss://chat.stream-io-api.com wss://chat.stream-io-api.com/:path* https://chat.stream-io-api.com https://maps.googleapis.com https://browser.sentry-cdn.com;
-  child-src ${process.env.SERVER_URL};
-  frame-src https://vercel.live http://localhost:3000 https://intercom-sheets.com http://www.loom.com https://www.loom.com https://www.loom.com/ https://js.stripe.com https://www.youtube.com https://player.vimeo.com https://player.vimeo.com/api/player.js https://vimeo.com https://www.youtube-nocookie.com https://fuxam-web-7e071.firebaseapp.com;
-  style-src 'self' 'unsafe-inline' https://sdk.birdeatsbug.com https://fonts.googleapis.com ;
-  object-src 'self' data:; 
-  img-src * data: blob:;
-  media-src 'self' https://js.intercomcdn.com blob:;
-  connect-src 'self' https://mobile.fuxam.app https://unsplash.com https://images.unsplash.com ${process.env.NEXT_PUBLIC_R2_BUCKET_URL} ${process.env.NEXT_PUBLIC_WORKER_URL} wss://ws-us3.pusher.com https://sockjs-us3.pusher.com https://api.tiptap.dev/ https://api.tiptap.dev/v https://vercel.live https://js.stripe.com https://www.loom.com wss://nexus-websocket-a.intercom.io https://api-iam.intercom.io https://4xe535du.api.sanity.io https://api-free.deepl.com https://storage.googleapis.com/fuxam-web-7e071.appspot.com https://sdk.birdeatsbug.com https://unpkg.com https://api.birdeatsbug.com https://vimeo.com https://dublin.stream-io-cdn.com https://securetoken.googleapis.com https://identitytoolkit.googleapis.com https://clerk.fuxam.app https://clerk.fuxam.app/:path* https://edge-config.vercel.com https://vitals.vercel-insights.com https://api.openai.com https://api.unsplash.com https://firebasestorage.googleapis.com https://faye-us-east.stream-io-api.com https://faye-us-east.stream-io-api.com/:path* https://emerging-sheepdog-40.clerk.accounts.dev https://emerging-sheepdog-40.clerk.accounts.dev/:path* https://api.stream-io-api.com https://api.stream-io-api.com/:path* https://accounts.google.com https://www.googleapis.com https://accounts.google.com/:path* https://www.googleapis.com/:path* wss://faye-us-east.stream-io-api.com wss://faye-us-east.stream-io-api.com/:path* wss://chat.stream-io-api.com wss://chat.stream-io-api.com/:path* https://chat.stream-io-api.com https://maps.googleapis.com https://api.giphy.com https://pingback.giphy.com https://media3.giphy.com *.amazonaws.com *.ingest.sentry.io https://fcm.googleapis.com/v1/projects/fuxam-app-capacitor-test/messages:send;
-  font-src 'self' https://fonts.intercomcdn.com https://unpkg.com https://fonts.googleapis.com https://fonts.gstatic.com;  
-  worker-src 'self' blob:;
-`;
+
 
 const turboPackEnabled =
   typeof process.env.NEXT_TURBOPACK_TRACING !== "undefined"; // set from package.json
@@ -38,10 +26,6 @@ const securityHeaders = [
     /** Retains much of the referrer's usefulness, while mitigating the risk of leaking data cross-origins. **/
     key: "Referrer-Policy",
     value: "strict-origin-when-cross-origin",
-  },
-  {
-    key: "Content-Security-Policy",
-    value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
   },
 ];
 

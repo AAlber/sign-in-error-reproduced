@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import { log } from "@/src/utils/logger/logger";
+// import { log } from "@/src/utils/logger/logger";
 import { useProgressScreenStore } from "../zustand";
 
 export const SliderPagination = () => {
@@ -8,7 +8,7 @@ export const SliderPagination = () => {
     useProgressScreenStore();
 
   const handlePaginationClick = (index: number) => {
-    log.info("User changes slides manually to", index);
+    // log.info("User changes slides manually to", index);
     setCurrentScreen(index);
     carouselApi!.scrollTo(index);
   };

@@ -4,7 +4,7 @@ import "../../styles/chat.scss";
 import "../../styles/globals.css";
 import "../translations/i18n/index";
 import { deDe, enUS } from "@clerk/localizations";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, useUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
@@ -16,22 +16,13 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { IntercomProvider } from "react-use-intercom";
-import useUser from "@/src/zustand/user";
 import { geist } from "@/styles/fonts";
-import { getTargetAndToken } from "../client-functions/client-invite";
-import useAuthSignout from "../client-functions/client-signout";
-import useThemeStore from "../components/dashboard/navigation/primary-sidebar/user-menu/theme-switcher/zustand";
-import ErrorBoundary from "../components/error-boundary";
-import GetStreamProvider from "../components/getstream";
-import Intercom from "../components/intercom";
-import usePersistInvite from "../components/invitation/persist-invite-zustand";
-import { Toaster } from "../components/reusable/toaster";
 import { UserProvider } from "../components/user-provider";
-import useDragObject from "../zustand/dragged-object";
-import useEdgeConfig from "../zustand/edge-config";
+// import useDragObject from "../zustand/dragged-object";
+// import useEdgeConfig from "../zustand/edge-config";
 
 const MyApp: AppType = (props) => {
-  const { theme } = useThemeStore();
+  // const { theme } = useThemeStore();
   const { user } = useUser();
 
   const [queryClient] = useState(
@@ -40,38 +31,38 @@ const MyApp: AppType = (props) => {
     }),
   );
 
-  const { persistedInvite } = usePersistInvite();
-  const isDark = theme === "dark";
+  // const { persistedInvite } = usePersistInvite();
+  // const isDark = theme === "dark";
 
-  const router = useRouter();
-  useEffect(() => {
-    if (!router.isReady) return;
-    const { target, token } = getTargetAndToken(router);
-    const targetsAreEqual = persistedInvite?.target === target;
-    const tokensAreEqual = persistedInvite?.token === token;
-    const bothTargetAndTokenMatch = targetsAreEqual && tokensAreEqual;
+  // const router = useRouter();
+  // useEffect(() => {
+  //   if (!router.isReady) return;
+  //   const { target, token } = getTargetAndToken(router);
+  //   const targetsAreEqual = persistedInvite?.target === target;
+  //   const tokensAreEqual = persistedInvite?.token === token;
+  //   const bothTargetAndTokenMatch = targetsAreEqual && tokensAreEqual;
 
-    if (
-      persistedInvite &&
-      !window.location.href.includes("process-invitation")
-    ) {
-      if (bothTargetAndTokenMatch) {
-        window.location.assign(
-          `/process-invitation/${persistedInvite.target}/${persistedInvite.token}`,
-        );
-      } else {
-        if (!target || !token) {
-          window.location.assign(
-            `/process-invitation/${persistedInvite.target}/${persistedInvite.token}`,
-          );
-        }
-      }
-    }
+  //   if (
+  //     persistedInvite &&
+  //     !window.location.href.includes("process-invitation")
+  //   ) {
+  //     if (bothTargetAndTokenMatch) {
+  //       window.location.assign(
+  //         `/process-invitation/${persistedInvite.target}/${persistedInvite.token}`,
+  //       );
+  //     } else {
+  //       if (!target || !token) {
+  //         window.location.assign(
+  //           `/process-invitation/${persistedInvite.target}/${persistedInvite.token}`,
+  //         );
+  //       }
+  //     }
+  //   }
 
-    // assign queryClient to window, so that it can be used anywhere, e.g. inside functions
-    window.queryClient = queryClient;
-  }, [persistedInvite, router.isReady, queryClient]);
-
+  //   // assign queryClient to window, so that it can be used anywhere, e.g. inside functions
+  //   window.queryClient = queryClient;
+  // }, [persistedInvite, router.isReady, queryClient]);
+  const isDark = true;
   return (
     <QueryClientProvider client={queryClient}>
       <main className={geist.className}>
@@ -81,7 +72,7 @@ const MyApp: AppType = (props) => {
           enableSystem
         >
           <IntercomProvider appId={"ujn432m3"} autoBoot>
-            <Intercom />
+            {/* <Intercom /> */}
             <ClerkProvider
               appearance={{
                 baseTheme: isDark ? dark : undefined,
@@ -139,7 +130,7 @@ const MyApp: AppType = (props) => {
                     : "hsl(222.2,84%,4.9%)",
                 },
               }}
-              localization={user.language === "de" ? deDe : enUS}
+              localization={enUS}
               {...props.pageProps}
             >
               <Main {...props} />
@@ -156,14 +147,14 @@ const MyApp: AppType = (props) => {
 export default MyApp;
 
 function Main({ Component, pageProps }) {
-  const { fetchEdgeConfig } = useEdgeConfig();
-  const { setData, setResult } = useDragObject();
-  const { signOut } = useAuthSignout("app.tsx");
+  // const { fetchEdgeConfig } = useEdgeConfig();
+  // const { setData, setResult } = useDragObject();
+  // const { signOut } = useAuthSignout("app.tsx");
 
   useEffect(() => {
     setAutoFreeze(false); // https://immerjs.github.io/immer/freezing/
     const abortController = new AbortController();
-    fetchEdgeConfig(process.env.NODE_ENV !== "development");
+    // fetchEdgeConfig(process.env.NODE_ENV !== "development");
 
     return () => {
       abortController.abort();
@@ -201,20 +192,20 @@ function Main({ Component, pageProps }) {
   }, []);
 
   return (
-    <ErrorBoundary
-      onReset={async (_error, close) => {
-        await signOut();
-        close();
-      }}
-    >
-      <Analytics />
+    // <ErrorBoundary
+    //   onReset={async (_error, close) => {
+    //     // await signOut();
+    //     close();
+    //   }}
+    // >
+      // <Analytics />
       <UserProvider attribute="class" defaultTheme="system" enableSystem>
         <style jsx global>{`
           html {
             font-family: ${geist.style.fontFamily};
           }
         `}</style>
-        <DragDropContext
+        {/* <DragDropContext
           onDragUpdate={onDragUpdate}
           onDragEnd={(result) => {
             if (result.combine) {
@@ -225,14 +216,14 @@ function Main({ Component, pageProps }) {
               setResult(result);
             }
           }}
-        >
-          <GetStreamProvider>
+        > */}
+          {/* <GetStreamProvider> */}
             <Component {...pageProps} />
-          </GetStreamProvider>
-        </DragDropContext>
+          {/* </GetStreamProvider> */}
+        {/* </DragDropContext> */}
       </UserProvider>
-      <Toaster />
-    </ErrorBoundary>
+      // <Toaster />
+    // </ErrorBoundary>
   );
 }
 

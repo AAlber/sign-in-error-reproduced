@@ -87,28 +87,22 @@
 
 "use client";
 
+import ProgressScreen from "@/src/components/reusable/progress-screen";
 import * as SignIn from "@clerk/elements/sign-in";
 import Head from "next/head";
-import { useTheme } from "next-themes";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { setCSSClasses } from "@/src/client-functions/client-institution-theme";
-import useThemeStore from "@/src/components/dashboard/navigation/primary-sidebar/user-menu/theme-switcher/zustand";
-import ProgressScreen from "@/src/components/reusable/progress-screen";
-import { Button } from "@/src/components/reusable/shadcn-ui/button";
-import type { Slide } from "@/src/types/progress-screen";
 
 function SignInPage() {
-  const { setTheme, resolvedTheme } = useTheme();
-  const { setInstiTheme, theme } = useThemeStore();
+  // const { setTheme, resolvedTheme } = useTheme();
+  // const { setInstiTheme, theme } = useThemeStore();
 
-  useEffect(() => {
-    setInstiTheme("blue");
-    setCSSClasses("blue");
-    setTheme(theme);
-  }, [resolvedTheme]);
+  // useEffect(() => {
+  //   // setInstiTheme("blue");
+  //   // setCSSClasses("blue");
+  //   // setTheme(theme);
+  // }, [resolvedTheme]);
 
-  const createSlide = (index: number): Slide => ({
+  const createSlide = (index: number): any => ({
     title: `sign-in_slide${index + 1}.title`,
     description: `sign-in_slide${index + 1}.description`,
     image: `/images/login/login_${index}.webp`,
@@ -141,13 +135,13 @@ function SignInPage() {
 const LearnMoreButton = () => {
   const { t } = useTranslation("page");
   return (
-    <Button
+    <button
       onClick={() => window.open("https://fuxam.com", "_blank")}
-      variant={"link"}
+
       className="text-white"
     >
       {t("learn_more")}
-    </Button>
+    </button>
   );
 };
 

@@ -1,8 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
-import { cachedRoutes } from "./utils/cache-handler/cache-key-types";
-import { handleCachedRoute } from "./utils/cache-handler/cache-middleware";
+// import { cachedRoutes } from "./utils/cache-handler/cache-key-types";
+// import { handleCachedRoute } from "./utils/cache-handler/cache-middleware";
 
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
@@ -57,16 +57,16 @@ export default clerkMiddleware(async (auth, request) => {
   } else if (!auth().userId && !isPublicRoute(request)) {
     return auth().redirectToSignIn({ returnBackUrl: request.url });
   }
-  const isCachedRoute = cachedRoutes.some((route) =>
-    request.nextUrl.pathname.includes(route.path),
-  );
+  // const isCachedRoute = cachedRoutes.some((route) =>
+  //   request.nextUrl.pathname.includes(route.path),
+  // );
   if (!isPublicRoute(request) && !isIgnoredRoute(request)) {
     auth().protect();
   }
-  if (!isCachedRoute) return NextResponse.next();
+  if (true) return NextResponse.next();
   else
     try {
-      return handleCachedRoute(auth, request);
+      // return handleCachedRoute(auth, request);
     } catch (error) {
       Sentry.captureException(error);
       return new Response("Internal Server Error", { status: 500 });
