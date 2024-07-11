@@ -1,0 +1,35 @@
+.ProseMirror {
+  figure[data-type='blockquoteFigure'] {
+    @apply my-6 text-black dark:text-white;
+  }
+
+  & > blockquote,
+  [data-type='blockquoteFigure'] {
+    blockquote {
+      @apply m-0;
+
+      & > * {
+        @apply first:mt-0 last:mb-0;
+      }
+    }
+  }
+
+  [data-type='blockquoteFigure'] {
+    @apply outline-neutral-700 hover:outline-neutral-600 dark:outline-neutral-300 dark:hover:outline-neutral-400;
+  }
+
+  [data-type='blockquoteFigure'] > div {
+    @apply border-l-4 border-l-neutral-700 py-2 px-4 bg-opacity-80 rounded-lg rounded-tl-none rounded-bl-none;
+    @apply dark:border-l-neutral-300;
+  }
+
+  [data-type='blockquoteFigure'] > blockquote {
+    @apply text-lg text-black;
+    @apply dark:text-white;
+  }
+
+  [data-type='blockquoteFigure'] figcaption {
+    @apply text-sm text-neutral-500 mt-4 transition-all overflow-hidden;
+    @apply dark:text-neutral-400;
+  }
+}

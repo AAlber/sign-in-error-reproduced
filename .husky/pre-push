@@ -1,0 +1,7 @@
+# export NODE_OPTIONS="--max-old-space-size=4096"
+
+# #!/usr/bin/env sh
+# . "$(dirname -- "$0")/_/husky.sh"
+
+# Validate types accross entire app
+npm run check-types

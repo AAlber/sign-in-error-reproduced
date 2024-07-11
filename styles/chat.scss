@@ -1,0 +1,69 @@
+@import "~stream-chat-react/dist/scss/v2/index.scss";
+
+$borderRadius: 8px;
+
+.chat-list-row-height {
+  min-height: 40px;
+}
+
+.str-chat__ul {
+  padding-bottom: 22px !important;
+  .str-chat__li--top {
+    .message-bubble {
+      border-radius: $borderRadius $borderRadius $borderRadius 0;
+    }
+    .my-message-bubble {
+      border-radius: $borderRadius $borderRadius 0 $borderRadius;
+      padding-right: 8px;
+    }
+  }
+  .str-chat__li--middle {
+    .message-bubble {
+      border-radius: 0 $borderRadius $borderRadius 0;
+    }
+    .my-message-bubble {
+      border-radius: $borderRadius 0 0 $borderRadius;
+    }
+  }
+  .str-chat__li--bottom {
+    .message-bubble {
+      border-radius: 0 $borderRadius $borderRadius $borderRadius;
+    }
+    .my-message-bubble {
+      border-radius: $borderRadius 0 $borderRadius $borderRadius;
+      padding-right: 8px;
+    }
+  }
+  .str-chat__li--single .message-bubble {
+    border-radius: $borderRadius;
+  }
+  .chat--message-content * {
+    // seems like tailwind doesnt have a word-break: break-word utility class:
+    // https://github.com/tailwindlabs/tailwindcss/issues/835
+    word-break: break-word !important;
+  }
+}
+
+// these classnames are also used to render the UI of the Text/Paragraph tools in content blocks
+// these classnames are sent along with the getstream message payload
+// later on, we can use these classNames to also customize the formatting from within fuxam mobile app
+
+.chat--blockquote {
+  @apply ml-2 flex border-l-[3px] border-border pl-2;
+}
+
+.chat--ul {
+  @apply ml-2 list-disc pl-2;
+}
+
+.chat--list-item {
+  @apply ml-2 pl-2;
+}
+
+.chat--numbered-list {
+  @apply list-decimal pl-4;
+}
+
+.chat--link-attachment {
+  @apply hover:underline;
+}

@@ -1,0 +1,280 @@
+:root {
+  --background: 0 72.2% 98%;
+  --contrast: 0 0% 3.9%;
+  --foreground: 0 0% 100%;
+
+  --muted: 0 0% 74.9%;
+  --muted-contrast: 0 0% 45.1%;
+
+  --popover: 0 0% 100%;
+  --popover-contrast: 0 0% 3.9%;
+
+  --card: 0 0% 100%;
+  --card-contrast: 0 0% 3.9%;
+
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+
+  --primary: 0 72.2% 50.6%;
+  --primary-contrast: 0 0% 8.9%;
+
+  --secondary: 0 0% 96.1%;
+  --secondary-contrast: 0 0% 9%;
+
+  --accent: 0 20% 86.1%;
+  --accent-contrast: 0 0% 9%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --ring: 0 72.2% 50.6%;
+}
+
+.PSPDFKit-Toolbar {
+  background-color: hsl(var(--foreground));
+  border-color: hsl(var(--border)) !important;
+  box-shadow: 0 1px 2px hsl(var(--border)) !important;
+}
+
+.PSPDFKit-Viewport {
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--border)) !important;
+}
+.PSPDFKit-Tool-Button:hover {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-ToolbarButton:focus {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Tool-Button {
+  border-color: hsl(var(--border)) !important;
+}
+
+.PSPDFKit-Input-Dropdown-Button:hover {
+  background-color: hsl(var(--accent)) !important;
+}
+.PSPDFKit-Tool-Button-active {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Tool-Button-active:hover {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Toolbar-Button-Sidebar:hover {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Toolbar-Button-Sidebar:active {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Toolbar-Dropdown {
+  background-color: hsl(var(--background));
+}
+
+.PSPDFKit-Input-Dropdown-Button:active {
+  background-color: hsl(var(--primary)) !important;
+}
+
+.PSPDFKit-Input-Dropdown-Button {
+  background-color: hsl(var(--foreground)) !important;
+}
+
+.PSPDFKit-Toolbar-Button-Sidebar,
+.PSPDFKit-Toolbar-Button-Sidebar-Thumbnails {
+  background-color: hsl(var(--foreground));
+}
+
+.PSPDFKit-Toolbar-Button-Sidebar:hover,
+.PSPDFKit-Toolbar-Button-Sidebar-Thumbnails:hover {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Toolbar-Button-Sidebar:active,
+.PSPDFKit-Toolbar-Button-Sidebar-Thumbnails:active {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Toolbar-Button-active,
+.PSPDFKit-Toolbar-Button-disabled {
+  background-color: hsl(var(--background));
+}
+
+.PSPDFKit-Toolbar-Button-active:hover,
+.PSPDFKit-Toolbar-Button-disabled:hover {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Toolbar-Button-active:active,
+.PSPDFKit-Toolbar-Button-disabled:active {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Popover {
+  background-color: hsl(var(--popover));
+}
+
+.PSPDFKit-Popover-Annotation-Tooltip {
+  background-color: hsl(var(--popover));
+}
+
+.PSPDFKit-Popover-Annotation-Tooltip-Content {
+  background-color: hsl(var(--popover));
+}
+
+.PSPDFKit-Annotation-Tooltip {
+  background-color: hsl(var(--popover));
+}
+
+.PSPDFKit-Toolbar-Button-active {
+  background-color: hsl(var(--primary)) !important;
+}
+
+.PSPDFKit-Toolbar-Button-active:hover {
+  background-color: hsl(var(--primary)) !important;
+}
+
+.PSPDFKit-Search {
+  background-color: hsl(var(--background));
+  border-color: hsl(var(--background));
+}
+
+.PSPDFKit-Search-Form-Input {
+  background-color: hsl(var(--background));
+}
+.PSPDFKit-Search-Control {
+  background-color: hsl(var(--background));
+}
+
+.PSPDFKit-Search-Control-Prev,
+.PSPDFKit-Search-Control-Prev-disabled {
+  background-color: hsl(var(--background));
+}
+
+.PSPDFKit-Search-Control-Prev:hover,
+.PSPDFKit-Search-Control-Prev-disabled:hover {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Search-Control-Prev:active,
+.PSPDFKit-Search-Control-Prev-disabled:active {
+  background-color: hsl(var(--background));
+}
+
+.PSPDFKit-Search-Control-Next,
+.PSPDFKit-Search-Control-Next-disabled {
+  background-color: hsl(var(--background));
+}
+
+.PSPDFKit-Search-Control-Next:hover,
+.PSPDFKit-Search-Control-Next-disabled:hover {
+  background-color: hsl(var(--accent));
+}
+
+.PSPDFKit-Search-Control-Next:active,
+.PSPDFKit-Search-Control-Next-disabled:active {
+  background-color: hsl(var(--background));
+}
+
+.PSPDFKit-Search-Form-Result {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--muted-contrast)) !important;
+}
+
+.PSPDFKit-Search-Button-Close {
+  background-color: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+}
+
+.PSPDFKit-Search-Button-Close:hover {
+  background-color: hsl(var(--accent));
+  border: 1px solid hsl(var(--border));
+}
+
+.PSPDFKit-Scroll {
+  background-color: hsl(var(--background));
+}
+
+.PSPDFKit-Input-Dropdown-Items {
+  background-color: hsl(var(--background));
+}
+
+.PSPDFKit-Sidebar-Thumbnails-Page-Image {
+  border-color: hsl(var(--primary)) !important;
+  box-shadow: 0 0 0 4px hsl(var(--primary)) !important;
+}
+
+.PSPDFKit-Sidebar {
+  background-color: hsl(var(--background)) !important;
+}
+
+.PSPDFKit-Sidebar-Dragger {
+  background-color: hsl(var(--muted)) !important;
+}
+
+.PSPDFKit-Scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.PSPDFKit-Scroll::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted));
+  border-radius: 5px;
+}
+
+.PSPDFKit-Scroll::-webkit-scrollbar-track {
+  background: hsl(var(--foreground));
+}
+
+.PSPDFKit-Sidebar-Thumbnails::-webkit-scrollbar {
+  width: 10px !important;
+}
+
+.PSPDFKit-Sidebar-Thumbnails::-webkit-scrollbar-thumb {
+  background-color: hsla(var(--primary), 0.3) !important;
+  border-radius: 5px !important;
+}
+
+.PSPDFKit-Sidebar-Thumbnails::-webkit-scrollbar-track {
+  background: hsl(var(--foreground)) !important;
+}
+
+.PSPDFKit-Toolbar-Button-Icon,
+.PSPDFKit-Icon svg {
+  stroke: hsl(var(--muted-contrast)) !important;
+}
+
+.PSPDFKit-Sidebar-Thumbnails-Page-Label {
+  color: hsl(var(--contrast)) !important;
+  background-color: hsl(var(--primary)) !important;
+}
+
+.PSPDFKit-Toolbar-Button-Sidebar {
+  background-color: hsl(var(--foreground)) !important;
+}
+
+.PSPDFKit-Toolbar-Button-Sidebar:hover {
+  background-color: hsl(var(--accent)) !important;
+}
+
+.PSPDFKit-Toolbar-Button-Sidebar:active {
+  background-color: hsl(var(--primary)) !important;
+}
+
+.PSPDFKit-Loading-Indicator {
+  background-color: hsl(var(--background)) !important;
+}
+
+.PSPDFKit-Progress {
+  border-color: hsl(var(--primary)) !important;
+}
+
+.PSPDFKit-Container {
+  background-color: hsl(var(--background)) !important;
+}

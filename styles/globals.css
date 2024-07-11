@@ -1,0 +1,1702 @@
+@import "./editor/main.css";
+@import "./editor/headings.css";
+@import "./editor/code-block.css";
+@import "./editor/lists.css";
+@import "./editor/blockquote-figure.css";
+@import "./editor/placeholder.css";
+@import "./editor/table.css";
+@import "./editor/columns.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .milkblur-strong {
+    @apply backdrop-blur-[200px] backdrop-filter;
+  }
+  .milkblur {
+    @apply backdrop-blur-[60px] backdrop-filter;
+  }
+  .milkblur-mid {
+    @apply backdrop-blur-[15px] backdrop-filter;
+  }
+  .milkblur-light {
+    @apply backdrop-blur-[5px] backdrop-filter;
+  }
+  .background {
+    @apply bg-background;
+  }
+  .hover-standard {
+    @apply hover:bg-gray-50 hover:dark:bg-offblack-2;
+  }
+  .border-standard {
+    @apply border border-border;
+  }
+  .t-primary {
+    @apply text-contrast;
+  }
+  .t-secondary {
+    @apply text-muted-contrast;
+  }
+  .t-danger {
+    @apply text-destructive;
+  }
+  .divide-standard {
+    @apply divide-offwhite-3 dark:divide-offblack-5;
+  }
+}
+
+body:not(.user-is-tabbing) button:focus {
+  outline: none;
+}
+
+.user-is-tabbing button:focus {
+  outline: auto;
+}
+
+.theme-gray {
+  --background: 220.9 39.3% 98%;
+  --contrast: 224 71.4% 4.1%;
+  --foreground: 0 0% 100%;
+
+  --muted: 220 14.3% 74.9%;
+  --muted-contrast: 220 8.9% 46.1%;
+
+  --popover: 0 0% 100%;
+  --popover-contrast: 224 71.4% 4.1%;
+
+  --card: 0 0% 100%;
+  --card-contrast: 224 71.4% 4.1%;
+
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+
+  --primary: 220.9 39.3% 11%;
+  --primary-contrast: 220.9 39.3% 98%;
+
+  --secondary: 220 14.3% 95.9%;
+  --secondary-contrast: 220.9 39.3% 11%;
+
+  --accent: 220 14.3% 88.9%;
+  --accent-contrast: 220.9 39.3% 11%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --ring: 224 71.4% 4.1%;
+
+  --radius: 0.35rem;
+}
+
+.dark .theme-gray {
+  --background: 0 0% 5%; /* Nearly black background */
+  --contrast: 0 0% 100%; /* Pure white for contrast */
+  --foreground: 0 0% 8%; /* Slightly lighter shade for the foreground text */
+
+  --muted: 0 0% 30%; /* Muted elements in a lighter shade of dark gray */
+  --muted-contrast: 0 0% 90%; /* Lighter shade for contrasted text on muted backgrounds */
+
+  --popover: 0 0% 12%; /* Popovers use the same dark shade as the foreground */
+  --popover-contrast: 0 0% 100%; /* Contrast for popovers */
+
+  --card: 0 0% 15%; /* Cards background, a bit lighter than the page background */
+  --card-contrast: 0 0% 100%; /* Text on cards */
+
+  --border: 0 0% 20%; /* Borders in a darker gray that stands out against the card background */
+  --input: 0 0% 25%; /* Input fields also in a slightly lighter dark gray for distinction */
+
+  --primary: 0 0% 100%; /* Primary elements in a medium gray to stand out against the background */
+  --primary-contrast: 0 0% 100%; /* Text on primary elements */
+
+  --secondary: 0 0% 40%; /* Secondary elements in a gray that's between primary and card background */
+  --secondary-contrast: 0 0% 100%; /* Text on secondary elements */
+
+  --accent: 0 0% 20%; /* Accent elements in a gray that matches the muted background */
+  --accent-contrast: 0 0% 100%; /* Text on accent elements */
+
+  --destructive: 0 65% 45%;
+  --destructive-contrast: 360 89% 93%;
+  --warning: 41 96% 25%;
+  --warning-contrast: 41 100% 93%;
+  --positive: 161 93.5% 45.4%;
+  --positive-contrast: 152 76% 80.4%;
+
+  --ring: 0 0% 60%; /* Focus ring for elements in a lighter gray to be visible */
+}
+
+.theme-classic {
+  --background: 185 43% 98%;
+  --contrast: 0 0% 3.9%;
+  --foreground: 0 0% 100%;
+
+  --muted: 0 0% 74, 9%;
+  --muted-contrast: 0 0% 45.1%;
+
+  --popover: 0 0% 100%;
+  --popover-contrast: 0 0% 3.9%;
+
+  --card: 0 0% 100%;
+  --card-contrast: 0 0% 3.9%;
+
+  --border: 185 5% 92%;
+  --input: 185 5% 92%;
+
+  --primary: 185 43% 19%;
+  --primary-contrast: 186 37% 7%;
+
+  --secondary: 185 5% 94%;
+  --secondary-contrast: 185 43% 11%;
+
+  --accent: 185 5% 88%;
+  --accent-contrast: 185 43% 11%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --ring: 185 43% 19%;
+
+  --radius: ;
+}
+
+.dark .theme-classic {
+  --background: 186 15% 8%; /* Darker background */
+  --contrast: 186 10% 98%; /* Very light for contrast */
+
+  --foreground: 186 20% 10.1%; /* Dark foreground */
+
+  --muted: 186 10% 18%; /* Muted for non-emphasized content */
+  --muted-contrast: 186 15% 60%; /* Lighter muted contrast */
+
+  --popover: 186 20% 10%; /* Darker popover to match foreground */
+  --popover-contrast: 186 10% 98%; /* Very light popover contrast */
+
+  --card: 186 20% 10%; /* Cards with a bit more saturation */
+  --card-contrast: 186 10% 98%; /* Light text on cards */
+
+  --border: 186 10% 18%; /* Border slightly lighter than muted */
+  --input: 186 10% 18%; /* Input fields similar to borders */
+
+  --primary: 185 43% 35%; /* No change to primary color */
+  --primary-contrast: 185 43% 98%; /* Text on primary elements, light for contrast */
+
+  --secondary: 186 10% 18%; /* Secondary elements match border */
+  --secondary-contrast: 186 10% 98%; /* Light text on secondary */
+
+  --accent: 186 10% 24%; /* Accents match secondary */
+  --accent-contrast: 186 10% 98%; /* Light text on accents */
+
+  /* No changes to the following */
+  --destructive: 0 65% 45%;
+  --destructive-contrast: 360 89% 93%;
+  --warning: 41 96% 25%;
+  --warning-contrast: 41 100% 93%;
+  --positive: 161 93.5% 45.4%;
+  --positive-contrast: 152 76% 80.4%;
+
+  --ring: 186 40% 30%; /* Focus ring color adjusted for visibility */
+}
+
+.theme-red {
+  --background: 0 72.2% 98%;
+  --contrast: 0 0% 3.9%;
+  --foreground: 0 0% 100%;
+
+  --muted: 0 0% 74.9%;
+  --muted-contrast: 0 0% 45.1%;
+
+  --popover: 0 0% 100%;
+  --popover-contrast: 0 0% 3.9%;
+
+  --card: 0 0% 100%;
+  --card-contrast: 0 0% 3.9%;
+
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+
+  --primary: 0 72.2% 50.6%;
+  --primary-contrast: 0 0% 8.9%;
+
+  --secondary: 0 0% 96.1%;
+  --secondary-contrast: 0 0% 9%;
+
+  --accent: 0 20% 86.1%;
+  --accent-contrast: 0 0% 9%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --ring: 0 72.2% 50.6%;
+
+  --radius: 0.4rem;
+}
+
+.dark .theme-red {
+  --background: 0 10% 7%; /* Dark red hue for the background */
+  --contrast: 0 9.1% 97.8%; /* Very light red for contrast */
+  --foreground: 0 14.3% 9.1%; /* Dark foreground similar to background */
+
+  --muted: 355 6.5% 21.1%; /* Muted red */
+  --muted-contrast: 350 5.4% 63.9%; /* Lighter red for contrasted text on muted backgrounds */
+
+  --popover: 0 14.3% 9.1%; /* Dark red for popovers */
+  --popover-contrast: 0 9.1% 97.8%; /* Contrast for popovers, light red */
+
+  --card: 0 14.3% 9.1%; /* Cards background */
+  --card-contrast: 0 9.1% 97.8%; /* Text on cards */
+
+  --border: 355 6.5% 21.1%; /* Red borders */
+  --input: 355 6.5% 21.1%; /* Input fields */
+
+  /* Keep the primary color as it is */
+  --primary: 0 72.2% 50.6%; /* Primary red buttons, etc. */
+  --primary-contrast: 0 72.2% 98%; /* Text on primary elements */
+
+  --secondary: 355 6.5% 21.1%; /* Secondary red elements */
+  --secondary-contrast: 0 9.1% 97.8%; /* Text on secondary elements */
+
+  --accent: 0 22.2% 26.1%; /* Accent elements */
+  --accent-contrast: 0 9.1% 97.8%; /* Text on accent elements */
+
+  /* No changes to the following */
+  --destructive: 0 65% 45%;
+  --destructive-contrast: 360 89% 93%;
+  --warning: 41 96% 25%;
+  --warning-contrast: 41 100% 93%;
+  --positive: 161 93.5% 45.4%;
+  --positive-contrast: 152 76% 80.4%;
+
+  --ring: 0 80% 30%; /* Focus ring for elements, a brighter red */
+}
+
+.theme-rose {
+  --background: 346.8 77.2% 98%;
+  --contrast: 240 10% 3.9%;
+  --foreground: 0 0% 100%;
+
+  --muted: 240 4.8% 74.9%;
+  --muted-contrast: 240 3.8% 46.1%;
+
+  --popover: 346.8 77.2% 98%;
+  --popover-contrast: 240 10% 3.9%;
+
+  --card: 346.8 77.2% 98%;
+  --card-contrast: 240 10% 3.9%;
+
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+
+  --primary: 346.8 77.2% 49.8%;
+  --primary-contrast: 20 14.3% 9.1%;
+
+  --secondary: 240 4.8% 95.9%;
+  --secondary-contrast: 240 5.9% 10%;
+
+  --accent: 346.8 77.2% 90.9%;
+  --accent-contrast: 240 5.9% 10%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --ring: 346.8 77.2% 49.8%;
+
+  --radius: 0.5rem;
+}
+
+.dark .theme-rose {
+  --background: 345 20% 7%; /* Darker rose for background */
+  --contrast: 345 10% 95%; /* Soft light rose for contrast text */
+
+  --foreground: 345 15% 9.1%; /* Slightly lighter foreground than the background */
+
+  --muted: 345 10% 20%; /* Muted rose */
+  --muted-contrast: 330 12% 60%; /* Lighter rose for contrast on muted backgrounds */
+
+  --popover: 345 25% 12%; /* Popover background matching the foreground */
+  --popover-contrast: 345 10% 95%; /* Light text on popovers */
+
+  --card: 345 25% 12%; /* Card background similar to popovers/foreground */
+  --card-contrast: 345 10% 95%; /* Text on cards, also light for contrast */
+
+  --border: 345 10% 20%; /* Borders slightly lighter than muted */
+  --input: 345 10% 20%; /* Input fields matching the borders */
+
+  --primary: 346.8 77.2% 49.8%; /* Keep primary color as is */
+  --primary-contrast: 346.8 77.2% 98%; /* Keep primary contrast as is */
+
+  --secondary: 345 10% 25%; /* Secondary rose elements */
+  --secondary-contrast: 345 10% 95%; /* Text on secondary elements */
+
+  --accent: 345 20% 25%; /* Accent elements matching secondary */
+  --accent-contrast: 345 10% 95%; /* Text on accent elements, also light */
+
+  /* No changes to the following */
+  --destructive: 0 65% 45%;
+  --destructive-contrast: 360 89% 93%;
+  --warning: 41 96% 25%;
+  --warning-contrast: 41 100% 93%;
+  --positive: 161 93.5% 45.4%;
+  --positive-contrast: 152 76% 80.4%;
+
+  --ring: 346.8 60% 50%; /* Adjusted focus ring to be less saturated */
+}
+
+.theme-orange {
+  --background: 24.6 95% 98%;
+  --contrast: 20 14.3% 4.1%;
+  --foreground: 0 0% 100%;
+
+  --muted: 60 4.8% 74.9%;
+  --muted-contrast: 25 5.3% 44.7%;
+
+  --popover: 0 0% 100%;
+  --popover-contrast: 20 14.3% 4.1%;
+
+  --card: 0 0% 100%;
+  --card-contrast: 20 14.3% 4.1%;
+
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+
+  --primary: 24.6 95% 53.1%;
+  --primary-contrast: 20 14.3% 10.1%;
+
+  --secondary: 60 4.8% 95.9%;
+  --secondary-contrast: 24 9.8% 10%;
+
+  --accent: 24.6 95% 90.3%;
+  --accent-contrast: 24 9.8% 10%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --ring: 24.6 95% 53.1%;
+
+  --radius: 0.95rem;
+}
+
+.dark .theme-orange {
+  --background: 25 10% 8%; /* Dark orange hue similar to violet and yellow themes */
+  --contrast: 25 9.1% 97.8%; /* Very light orange for contrast */
+  --foreground: 25 14.3% 9.1%; /* Dark foreground in the orange theme range */
+
+  --muted: 20 6.5% 21.1%; /* Muted orange */
+  --muted-contrast: 30 5.4% 63.9%; /* Lighter orange for contrasted text on muted backgrounds */
+
+  --popover: 25 14.3% 9.1%; /* Dark orange for popovers */
+  --popover-contrast: 25 9.1% 97.8%; /* Contrast for popovers, light orange */
+
+  --card: 25 14.3% 9.1%; /* Cards background */
+  --card-contrast: 25 9.1% 97.8%; /* Text on cards */
+
+  --border: 20 6.5% 21.1%; /* Orange borders */
+  --input: 20 6.5% 21.1%; /* Input fields */
+
+  /* Keep the primary color as requested */
+  --primary: 20.5 90.2% 48.2%;
+  --primary-contrast: 24.6 95% 98%;
+
+  --secondary: 20 6.5% 21.1%; /* Secondary orange elements */
+  --secondary-contrast: 25 9.1% 97.8%; /* Text on secondary elements */
+
+  --accent: 20 20.5% 24.1%; /* Accent elements */
+  --accent-contrast: 25 9.1% 97.8%; /* Text on accent elements */
+
+  /* No changes to the following */
+  --destructive: 0 65% 45%;
+  --destructive-contrast: 360 89% 93%;
+  --warning: 41 96% 25%;
+  --warning-contrast: 41 100% 93%;
+  --positive: 161 93.5% 45.4%;
+  --positive-contrast: 152 76% 80.4%;
+
+  --ring: 20.5 90.2% 48.2%; /* Focus ring color remains the same as primary */
+}
+
+.theme-green {
+  --background: 142.1 76.2% 98%;
+  --contrast: 240 10% 3.9%;
+  --foreground: 0 0% 100%;
+
+  --muted: 240 4.8% 74.9%;
+  --muted-contrast: 240 3.8% 46.1%;
+
+  --popover: 0 0% 100%;
+  --popover-contrast: 240 10% 3.9%;
+
+  --card: 0 0% 100%;
+  --card-contrast: 240 10% 3.9%;
+
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+
+  --primary: 142.1 76.2% 36.3%;
+  --primary-contrast: 0 0% 11.1%;
+
+  --secondary: 240 4.8% 95.9%;
+  --secondary-contrast: 240 5.9% 10%;
+
+  --accent: 142.1 42.2% 86%;
+  --accent-contrast: 240 5.9% 10%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --ring: 142.1 76.2% 36.3%;
+
+  --radius: ;
+}
+
+.dark .theme-green {
+  --background: 0 0% 9.1%;
+  --contrast: 0 0% 95%;
+  --foreground: 0 0% 11.1%;
+
+  --muted: 142 4.7% 23%;
+  --muted-contrast: 0 0% 68.9%;
+
+  --popover: 0 0.3% 11.1%;
+  --popover-contrast: 0 0% 95%;
+
+  --card: 240 14.3% 11.1%;
+  --card-contrast: 0 0% 95%;
+
+  --border: 142 4.7% 23%;
+  --input: 142 4.7% 23%;
+
+  --primary: 150.1 80.6% 50.3%;
+  --primary-contrast: 142.1 76.2% 98%;
+
+  --secondary: 142 4.7% 23%;
+  --secondary-contrast: 0 0% 98%;
+
+  --accent: 142 4.7% 25%;
+  --accent-contrast: 0 0% 98%;
+
+  --destructive: 0 65% 45%;
+  --destructive-contrast: 360 89% 93%;
+  --warning: 41 96% 25%;
+  --warning-contrast: 41 100% 93%;
+  --positive: 161 93.5% 45.4%;
+  --positive-contrast: 152 76% 80.4%;
+
+  --ring: 142.4 71.8% 29.2%;
+}
+
+.theme-blue {
+  --background: 221.2 83.2% 98%;
+  --contrast: 222.2 84% 4.9%;
+  --foreground: 0, 0%, 100%;
+  --card: 0 0% 100%;
+  --card-contrast: 0, 0%, 95%;
+  --popover: 0 0% 100%;
+  --popover-contrast: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 58.3%;
+  --primary-contrast: 222.2 84% 7.5%;
+  --secondary: 210 40% 96.1%;
+  --secondary-contrast: 222.2 47.4% 11.2%;
+  --muted: 223 11% 74.9%;
+  --muted-contrast: 215.4 16.3% 46.9%;
+  --accent: 210 40% 89%;
+  --accent-contrast: 222.2 47.4% 11.2%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.95rem;
+}
+
+.dark .theme-blue {
+  --background: 222.2 84% 7.5%;
+  --contrast: 210 40% 98%;
+  --foreground: 222, 59%, 10%;
+  --card: 222.2 84% 7.5%;
+  --card-contrast: 210 40% 98%;
+  --popover: 222.2 84% 7.5%;
+  --popover-contrast: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-contrast: 221.2 83.2% 98%;
+  --secondary: 217.2 32.6% 19.5%;
+  --secondary-contrast: 210 40% 98%;
+  --muted: 217.2 32.6% 20.5%;
+  --muted-contrast: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 29.5%;
+  --accent-contrast: 210 40% 98%;
+
+  --destructive: 0 65% 45%;
+  --destructive-contrast: 360 89% 93%;
+  --warning: 41 96% 25%;
+  --warning-contrast: 41 100% 93%;
+  --positive: 161 93.5% 45.4%;
+  --positive-contrast: 152 76% 80.4%;
+
+  --border: 217.2 32.6% 19.5%;
+  --input: 217.2 32.6% 19.5%;
+  --ring: 224.3 76.3% 48%;
+}
+
+.theme-yellow {
+  --background: 44 100% 98%;
+  --contrast: 20 14.3% 4.1%;
+  --foreground: 0 0% 100%;
+
+  --muted: 60 4.8% 74.9%;
+  --muted-contrast: 25 5.3% 44.7%;
+
+  --popover: 0 0% 100%;
+  --popover-contrast: 20 14.3% 4.1%;
+
+  --card: 0 0% 100%;
+  --card-contrast: 20 14.3% 4.1%;
+
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+
+  --primary: 47.9 95.8% 53.1%;
+  --primary-contrast: 20 14.3% 9.1%;
+
+  --secondary: 60 4.8% 95.9%;
+  --secondary-contrast: 24 9.8% 10%;
+
+  --accent: 44 70% 85%;
+  --accent-contrast: 24 9.8% 10%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --ring: 20 14.3% 4.1%;
+
+  --radius: 0.5rem;
+}
+
+.dark .theme-yellow {
+  --background: 30 10% 8%;
+  --contrast: 60 9.1% 97.8%;
+  --foreground: 30 14.3% 9.1%;
+
+  --muted: 12 6.5% 21.1%;
+  --muted-contrast: 24 5.4% 63.9%;
+
+  --popover: 20 14.3% 9.1%;
+  --popover-contrast: 60 9.1% 97.8%;
+
+  --card: 20 14.3% 9.1%;
+  --card-contrast: 60 9.1% 97.8%;
+
+  --border: 12 6.5% 21.1%;
+  --input: 12 6.5% 21.1%;
+
+  --primary: 47.9 95.8% 53.1%;
+  --primary-contrast: 44 100% 98%;
+
+  --secondary: 12 6.5% 21.1%;
+  --secondary-contrast: 60 9.1% 97.8%;
+
+  --accent: 30 14.3% 23.5%;
+  --accent-contrast: 60 9.1% 97.8%;
+
+  --destructive: 0 65% 45%;
+  --destructive-contrast: 360 89% 93%;
+  --warning: 41 96% 25%;
+  --warning-contrast: 41 100% 93%;
+  --positive: 161 93.5% 45.4%;
+  --positive-contrast: 152 76% 80.4%;
+
+  --ring: 35.5 91.7% 32.9%;
+}
+
+.theme-violet {
+  --background: 262.1 83.3% 98%;
+  --contrast: 224 71.4% 4.1%;
+  --foreground: 0 0% 100%;
+
+  --muted: 220 14.3% 74.9%;
+  --muted-contrast: 220 8.9% 46.1%;
+
+  --popover: 0 0% 100%;
+  --popover-contrast: 224 71.4% 4.1%;
+
+  --card: 0 0% 100%;
+  --card-contrast: 224 71.4% 4.1%;
+
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+
+  --primary: 262.1 83.3% 57.8%;
+  --primary-contrast: 224 71.4% 9.1%;
+
+  --secondary: 220 14.3% 95.9%;
+  --secondary-contrast: 220.9 39.3% 11%;
+
+  --accent: 262.1 53.3% 87.9%;
+  --accent-contrast: 220.9 39.3% 11%;
+
+  --destructive: 0 84.2% 55%;
+  --destructive-contrast: 360 100% 15%;
+  --warning: 50 98% 85%;
+  --warning-contrast: 50 31% 15%;
+  --positive: 156 71.6% 40.9%;
+  --positive-contrast: 164 85.7% 16.5%;
+
+  --ring: 262.1 83.3% 57.8%;
+
+  --radius: ;
+}
+
+.dark .theme-violet {
+  --background: 262 10% 8%; /* Dark violet hue */
+  --contrast: 262 9.1% 97.8%; /* Very light violet for contrast */
+  --foreground: 262 14.3% 9.1%; /* Dark foreground similar to yellow theme */
+
+  --muted: 250 6.5% 21.1%; /* Muted violet */
+  --muted-contrast: 240 15.4% 63.9%; /* Lighter violet for contrasted text on muted backgrounds */
+
+  --popover: 262 14.3% 9.1%; /* Dark violet for popovers */
+  --popover-contrast: 262 9.1% 97.8%; /* Contrast for popovers, light violet */
+
+  --card: 262 14.3% 9.1%; /* Cards background */
+  --card-contrast: 262 9.1% 97.8%; /* Text on cards */
+
+  --border: 250 6.5% 21.1%; /* Violet borders */
+  --input: 250 6.5% 21.1%; /* Input fields */
+
+  --primary: 270 95.8% 53.1%; /* Primary violet buttons, etc. */
+  --primary-contrast: 260 100% 98%; /* Text on primary elements */
+
+  --secondary: 250 6.5% 21.1%; /* Secondary violet elements */
+  --secondary-contrast: 262 9.1% 97.8%; /* Text on secondary elements */
+
+  --accent: 262 14.3% 24.1%; /* Accent elements */
+  --accent-contrast: 262 9.1% 97.8%; /* Text on accent elements */
+
+  --destructive: 0 65% 45%;
+  --destructive-contrast: 360 89% 93%;
+  --warning: 41 96% 25%;
+  --warning-contrast: 41 100% 93%;
+  --positive: 161 93.5% 45.4%;
+  --positive-contrast: 152 76% 80.4%;
+
+  --ring: 275 91.7% 32.9%; /* Focus ring for elements */
+}
+
+@layer utilities {
+  --heading {
+    @apply text-xl font-bold text-contrast;
+  }
+}
+
+/**************** CSS ******************/
+
+/**
+*  Style for the google maps preview in the schedule
+*/
+a[href^="http://maps.google.com/maps"]
+{
+  display: none !important;
+}
+
+.gm-style-cc {
+  display: none;
+}
+
+.gmnoprint div {
+  background: none !important;
+}
+
+/*
+*  Style for the url previews in the course feed
+*/
+
+.raf-card__image {
+  width: 200px;
+  object-fit: fill;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-right: 20px;
+}
+
+.raf-card__title {
+  font-size: 1rem;
+  font-weight: 550;
+}
+
+.raf-card__description {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #4a5568;
+}
+
+::-webkit-scrollbar {
+  display: none !important;
+}
+
+:root .scrollbars-hide-all {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.menu-items-fixed {
+  margin-top: -10px !important;
+  margin-right: -10px !important;
+}
+
+.widget {
+  overflow: hidden !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+div:empty::before {
+  color: grey;
+}
+div[data-placeholder]:not([data-placeholder=""]):empty::before {
+  content: attr(data-placeholder);
+}
+
+/**
+* Excalidraw/Whiteboard
+*/
+
+/* Hides the zen mode button */
+.excalidraw .disable-zen-mode--visible {
+  display: none;
+}
+
+/* Hides the Help icon */
+.excalidraw button.help-icon {
+  display: none;
+}
+
+/* Hides the Libary Icon */
+.excalidraw div.library-button {
+  display: none;
+}
+
+/* Hides the Menu icon */
+.excalidraw button.dropdown-menu-button {
+  display: none;
+}
+
+/* Emoji mart's <em-emoji */
+.message-reactions span.emoji-mart-emoji {
+  font-size: 3px !important;
+}
+
+.react-select__input {
+  box-shadow: none !important;
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.react-select__menu {
+  box-shadow: none !important;
+}
+
+.input-billing,
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+:root {
+  --card-color: rgb(23, 23, 23);
+}
+
+#cards:hover > .card::after {
+  opacity: 1;
+}
+
+.card {
+  background-color: #1e293b;
+  position: relative;
+  border-radius: 13px;
+  z-index: 1;
+  display: flex;
+  height: 140px;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card::before,
+.card::after {
+  content: "";
+  height: 100%;
+  border-radius: 13px;
+  left: 0px;
+  opacity: 0;
+  position: absolute;
+  top: 0px;
+  transition: opacity 500ms;
+  width: 100%;
+}
+
+.card::before {
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.06),
+    transparent 40%
+  );
+  z-index: 3;
+}
+
+.card::after {
+  background: radial-gradient(
+    600px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.4),
+    transparent 40%
+  );
+  z-index: 1;
+}
+
+.card > .card-content {
+  @apply bg-foreground;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  inset: 1px;
+  border-radius: 13px;
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* White Mode */
+
+.card-white {
+  background-color: #e2e8f0;
+  position: relative;
+  z-index: 1;
+  border-radius: 13px;
+  display: flex;
+  height: 140px;
+}
+
+#cards:hover > .card-white::after {
+  opacity: 1;
+}
+
+.card-white:hover::before {
+  opacity: 1;
+}
+
+.card-white::before,
+.card-white::after {
+  content: "";
+  height: 100%;
+  left: 0px;
+  opacity: 0;
+  border-radius: 13px;
+  position: absolute;
+  top: 0px;
+  transition: opacity 500ms;
+  width: 100%;
+}
+
+.card-white::before {
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.06),
+    transparent 40%
+  );
+  z-index: 3;
+}
+
+.card-white::after {
+  background: radial-gradient(
+    600px circle at var(--mouse-x) var(--mouse-y),
+    rgba(24, 23, 23, 0.6),
+    transparent 40%
+  );
+  z-index: 1;
+}
+
+.card-white > .card-content {
+  @apply bg-gradient-to-tr from-white to-offwhite-1 dark:bg-offblack-2 dark:from-offblack-3 dark:to-offblack-1;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  inset: 1px;
+  border-radius: 13px;
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.emojis-feedback:hover {
+  transform: scale(1.2);
+  transition: all 0.2s ease-in-out;
+  @apply border-blue-400 bg-background dark:border-blue-600 dark:bg-offblack-6;
+}
+
+.emojis-feedback-selected {
+  transform: scale(1.2);
+  transition: all 0.2s ease-in-out;
+  @apply border-blue-400 bg-background dark:border-blue-600 dark:bg-offblack-6;
+}
+
+.btn-shine {
+  text-decoration: none;
+  -webkit-mask-image: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.6) 30%,
+    #000 50%,
+    rgba(0, 0, 0, 0.6) 70%
+  );
+  -webkit-mask-size: 200%;
+  animation: shine 2s linear infinite;
+}
+
+@keyframes shine {
+  from {
+    -webkit-mask-position: 150%;
+  }
+  to {
+    -webkit-mask-position: -50%;
+  }
+}
+
+.institution-settings-image[type="file"]::-webkit-file-upload-button {
+  cursor: pointer;
+}
+
+@keyframes hover {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hover-and-resize {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-7px) scale(1.2);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hover-and-resize {
+  animation: hover-and-resize 4s ease-in-out infinite;
+}
+
+.hover-effect {
+  animation: hover 4s ease-in-out infinite;
+}
+
+.cl-userPreviewMainIdentifier {
+  font-size: medium;
+}
+
+.cl-card {
+  width: 100%;
+}
+
+.notification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+#nprogress .bar {
+  @apply: !bg-primary
+
+  width: 100%;
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+.temp .react-flow__edge-path {
+  @apply stroke-muted-contrast;
+  stroke-dasharray: 5 5;
+}
+
+.moving-border {
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    hsl(var(--border)) 0deg,
+    hsl(var(--border)) 112.5deg,
+    hsl(var(--border)) 228.75deg,
+    hsl(var(--primary)) 360deg
+  );
+}
+
+.intercom-ruskli {
+  @apply !absolute !top-20 !z-[998];
+}
+.uppy-Dashboard-browse {
+  color: hsl(var(--primary)) !important;
+  font-size: 0.875rem !important;
+  text-decoration-line: none !important;
+}
+
+.uppy-StatusBar-actionBtn--retry {
+  background-color: hsl(var(--background)) !important;
+  /* color: hsl(var(--background)) !important; */
+  font-size: 0.875rem !important;
+}
+
+.uppy-Dashboard-browse :focus {
+  text-decoration: underline !important;
+  text-decoration-color: red !important;
+
+  text-decoration-line: none !important;
+}
+.uppy-DashboardContent-bar {
+  background-color: transparent !important;
+  border-bottom: none !important;
+}
+.uppy-Dashboard-inner {
+  border: none !important;
+  background-color: transparent !important;
+}
+.uppy-DashboardContent-title {
+  color: hsl(var(--contrast)) !important;
+  font-size: 0.875rem !important;
+}
+
+.uppy-Dashboard-Item-previewInnerWrap {
+  background-color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(var(--muted)) !important;
+  border-radius: 6px !important;
+}
+
+.uppy-Dashboard-Item-name {
+  color: hsl(var(--contrast)) !important;
+  font-size: 0.875rem !important;
+}
+.uppy-Dashboard-Item-statusSize {
+  font-size: 0.75rem !important;
+  color: hsl(var(--muted-contrast)) !important;
+}
+.uppy-Dashboard-inner .uppy-StatusBar {
+  /* border: none !important; */
+  background-color: transparent !important;
+  display: none !important;
+}
+.uppy-StatusBar {
+  border-top: 1px solid hsl(var(--muted)) !important;
+  background-color: transparent !important;
+  border: none !important;
+  z-index: 40 !important;
+}
+.uppy-StatusBar:before {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.uppy-Dashboard-innerWrap {
+  background-color: transparent !important;
+  border: 1px dashed hsl(var(--primary) / 0.5) !important;
+  height: auto !important;
+  overflow-y: scroll !important;
+  max-height: 300px !important;
+}
+.uppy-Dashboard-AddFiles {
+  background-color: transparent !important;
+}
+.uppy-Dashboard-input {
+  background-color: hsl(var(--primary)) !important;
+}
+
+[data-uppy-num-acquirers="0"] .uppy-Dashboard-AddFiles-title {
+  /* text-align: right !important; */
+  color: hsl(var(--muted-contrast)) !important;
+  font-size: 0.875rem !important;
+  font-weight: 400;
+}
+[data-uppy-drag-drop-supported="true"] .uppy-Dashboard-AddFiles {
+  border: none !important;
+}
+.uppy-StatusBar .is-waiting {
+  border: none;
+  background-color: transparent;
+}
+
+.uppy-StatusBar-actionBtn--upload {
+  display: none !important;
+  /* background-color: hsl(var(--primary) / 0.2) !important;
+  border: 2px solid hsl(var(--primary)) !important;
+  color: hsl(var(--contrast)) !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+    padding: 0.5rem 1rem !important;
+    border: 1px solid hsl(var(--primary));
+    border-radius: 0.375rem */
+}
+
+#radix-:r35 {
+  height: 10px !important;
+}
+
+.uppy-StatusBar .uppy-StatusBar-progress {
+  background-color: hsl(var(--primary)) !important;
+}
+
+.uppy-StatusBar .uppy-StatusBar-statusIndicator {
+  color: hsl(var(--muted-contrast)) !important;
+}
+
+.uppy-StatusBar-actionBtn {
+  color: hsl(var(--primary)) !important;
+  font-size: 0.875rem !important;
+}
+.uppy-Dashboard-Item-action--copyLink {
+  display: none !important;
+}
+.uppy-Dashboard-AddFilesPanel {
+  background-color: hsl(var(--background)) !important;
+  background: hsl(var(--background)) !important;
+}
+.uppy-StatusBar-actionBtn--done {
+  display: none !important;
+}
+
+.uppy-Dashboard-Item {
+  border-bottom: none !important;
+}
+
+.uppy-Dashboard-Item-progressIndicator svg circle {
+  color: hsl(var(--background)) !important;
+  background-color: hsl(var(--primary)) !important;
+  fill: hsl(var(--background)) !important;
+  stroke: hsl(var(--primary)) !important;
+}
+
+.uppy-Dashboard-Item-progressIndicator svg polygon {
+  color: hsl(var(--background)) !important;
+}
+
+.uppy-StatusBar-content {
+  color: hsl(var(--muted-contrast)) !important;
+}
+
+.uppy-StatusBar-statusPrimary {
+  font-weight: 400 !important;
+  font-size: 0.75rem !important;
+}
+.uppy-DashboardContent-addMore {
+  background-color: transparent !important;
+  color: hsl(var(--primary)) !important;
+}
+.uppy-DashboardContent-back {
+  background-color: transparent !important;
+  color: hsl(var(--primary)) !important;
+}
+.uppy-StatusBar-spinner {
+  fill: hsl(var(--primary)) !important;
+}
+.uppy-StatusBar-actionCircleBtn svg circle {
+  fill: hsl(var(--primary)) !important;
+}
+button.uppy-u-reset.uppy-StatusBar-actionCircleBtn[data-cy="cancel"][data-uppy-super-focusable="true"] {
+  /* CSS properties */
+  display: none !important;
+}
+
+.main-grid {
+  grid-template-columns: calc(var(--lesson-path-width, 454px) / 2) calc(
+      var(--lesson-path-width, 454px) / 2
+    );
+  width: var(--lesson-path-width, 454px);
+  position: relative;
+  padding-top: var(--first-node-top-overflow, 42px);
+}
+
+.centerLeftStart-main {
+  grid-column: span 2 / span 2;
+  position: relative;
+  margin-top: -2px;
+}
+
+.centerLeftStart-line {
+  position: relative;
+  width: 454px;
+  height: 160px;
+  visibility: visible;
+}
+
+.centerLeftStart-svg {
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: var(--chakra-colors-gray-200);
+  vertical-align: middle;
+  position: absolute;
+  width: 454px;
+  height: 160px;
+  fill: none;
+}
+
+.centerLeftStart-block {
+  width: var(--node-container-width, 336px);
+  height: var(--node-container-height, 176px);
+  position: absolute;
+  top: calc(var(--first-node-top-overflow, 42px) * -1);
+  left: calc(50% - (var(--node-container-width, 336px) / 2));
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.centerLeftStart-blockWrapper {
+  width: var(--node-master-width, 130px);
+  height: var(--node-master-height, 100%);
+}
+
+.centerLeftStart-itemBlock {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: var(--node-master-width, 130px);
+  margin-top: -12.7px;
+}
+
+.blockTrigger {
+  position: relative;
+}
+
+.blockTriggerButton {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  width: 80px;
+  height: 124px;
+  scroll-margin-top: calc(50vh - (124px / 2));
+}
+
+.canva {
+  visibility: visible;
+  width: 100%;
+  height: 100%;
+}
+
+.leftCenter-main {
+  position: relative;
+  margin-top: calc((var(--trail-0-offset, 38px) * -1) - 2px);
+  grid-column: span 1 / span 1;
+}
+
+.leftCenterStart-main {
+  position: relative;
+  margin-top: -2px;
+  grid-column: span 1 / span 1;
+}
+
+.leftCenter-line,
+.leftCenterStart-line {
+  position: relative;
+  width: 228px;
+  height: 263px;
+  visibility: visible;
+}
+
+.leftCenter-svg,
+.leftCenterStart-svg {
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: var(--chakra-colors-gray-200);
+  vertical-align: middle;
+  position: absolute;
+  width: 228px;
+  height: 263px;
+  fill: none;
+}
+.leftCenter-block,
+.leftCenterStart-block {
+  width: var(--node-container-width, 336px);
+  height: var(--node-container-height, 176px);
+  position: absolute;
+  top: var(--trail-1-offset, -75.5px);
+  left: calc(
+    (var(--lesson-path-width, 454px) / 2) -
+      (var(--node-container-width, 336px) / 2)
+  );
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+
+.centerRight-main {
+  position: relative;
+  margin-top: calc((var(--trail-0-offset, 38px) * -1) - 2px);
+  grid-column: span 1 / span 1;
+}
+
+.centerRightStart-main {
+  position: relative;
+  margin-top: -2px;
+  grid-column: span 1 / span 1;
+}
+
+.centerRight-line,
+.centerRightStart-line {
+  position: relative;
+  width: 228px;
+  height: 263px;
+  visibility: visible;
+  display: initial;
+}
+
+.centerRight-svg,
+.centerRightStart-svg {
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: var(--chakra-colors-gray-200);
+  vertical-align: middle;
+  position: absolute;
+  width: 228px;
+  height: 263px;
+  fill: none;
+}
+
+.centerRight-block,
+.centerRightStart-block {
+  width: var(--node-container-width, 336px);
+  height: var(--node-container-height, 176px);
+  position: absolute;
+  top: 49.5px;
+  right: calc(
+    (var(--lesson-path-width, 454px) / 2) -
+      (var(--node-container-width, 336px) / 2)
+  );
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.rightCenter-main {
+  grid-column: span 2 / span 2;
+  position: relative;
+  margin-top: -2px;
+}
+
+.rightCenter-line {
+  position: relative;
+  width: 454px;
+  height: 126px;
+  visibility: visible;
+}
+
+.rightCenter-svg {
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: var(--chakra-colors-gray-200);
+  vertical-align: middle;
+  position: absolute;
+  width: 454px;
+  height: 126px;
+  fill: none;
+}
+
+.rightCenter-block {
+  width: var(--node-container-width, 336px);
+  height: var(--node-container-height, 176px);
+  position: absolute;
+  top: var(--trail-3-offset, -87.5px);
+  right: calc(
+    (var(--lesson-path-width, 454px) / 2) -
+      (var(--node-container-width, 336px) / 2)
+  );
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+}
+
+.centerLeft-main {
+  grid-column: span 2 / span 2;
+  position: relative;
+  margin-top: -2px;
+}
+
+.centerLeft-line {
+  position: relative;
+  width: 454px;
+  height: 168px;
+  visibility: visible;
+}
+
+.centerLeft-svg {
+  display: inline-block;
+  line-height: 1em;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  color: var(--chakra-colors-gray-200);
+  vertical-align: middle;
+  position: absolute;
+  width: 454px;
+  height: 168px;
+  fill: none;
+}
+
+.centerLeft-block {
+  width: var(--node-container-width, 336px);
+  height: var(--node-container-height, 176px);
+  position: absolute;
+  top: var(--trail-4-offset, -89px);
+  right: calc(
+    (var(--lesson-path-width, 454px) / 2) -
+      (var(--node-container-width, 336px) / 2)
+  );
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.learning-background {
+  -webkit-mask-image: url(/learning-journey/journey-background.svg),
+    url(/learning-journey/journey-background.svg),
+    url(/learning-journey/journey-background.svg);
+  mask-image: url(/learning-journey/journey-background.svg),
+    url(/learning-journey/journey-background.svg),
+    url(/learning-journey/journey-background.svg);
+  -webkit-mask-position:
+    0px
+      calc(
+        (
+            var(--background-pattern-height, 528px) -
+              (var(--background-pattern-width, 30px) / 2)
+          ) * 0
+      ),
+    0px
+      calc(
+        (
+            var(--background-pattern-height, 528px) -
+              (var(--background-pattern-width, 30px) / 2)
+          ) * 1
+      ),
+    0px
+      calc(
+        (
+            var(--background-pattern-height, 528px) -
+              (var(--background-pattern-width, 30px) / 2)
+          ) * 2
+      );
+  mask-position:
+    0px
+      calc(
+        (
+            var(--background-pattern-height, 528px) -
+              (var(--background-pattern-width, 30px) / 2)
+          ) * 0
+      ),
+    0px
+      calc(
+        (
+            var(--background-pattern-height, 528px) -
+              (var(--background-pattern-width, 30px) / 2)
+          ) * 1
+      ),
+    0px
+      calc(
+        (
+            var(--background-pattern-height, 528px) -
+              (var(--background-pattern-width, 30px) / 2)
+          ) * 2
+      );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  position: absolute;
+  top: calc(var(--background-pattern-top-overflow, 114px) * -1);
+  left: 0px;
+  width: var(--lesson-path-width, 454px);
+  height: var(
+    --path-background-pattern-height,
+    calc(100% + var(--background-pattern-top-overflow, 114px))
+  );
+  background-color: hsla(var(--muted-contrast));
+}
+
+.uppy-Informer-animated > p {
+  display: none !important;
+  /* width: auto !important;
+  background-color: transparent !important;
+  border: 1px solid hsl(var(--warning)) !important;
+  border-radius: 0.35rem !important; */
+}
+
+.uppy-StatusBar-details[aria-label="Show error details"] {
+  display: none !important;
+}
+
+.uppy-StatusBar-actionCircleBtn[aria-label="Abbrechen"] {
+  display: none !important;
+}
+
+.uppy-Dashboard-Item-action--remove {
+  color: transparent !important;
+  right: 20px !important;
+  top: 20px !important;
+}
+.uppy-Dashboard-Item-action--remove svg {
+  scale: 1.6;
+}
+
+.uppy-Dashboard-inner {
+  height: auto !important;
+}
+
+.uppy-Dashboard-dropFilesHereHint {
+  height: 50px !important;
+}
+
+.uppy-c-icon svg:hover {
+  fill: hsl(var(--primary)) !important;
+}
+.uppy-Dashboard-Item-progressIcon--progress {
+  fill: hsl(var(--primary)) !important;
+}
+
+.uppy-Dashboard-Item-progressIcon--circle {
+  fill: hsl(var(--primary)) !important;
+}
+
+.uppy-Dashboard-Item-progressIcon--circle polygon {
+  fill: hsl(var(--primary)) !important;
+}
+
+.user-management-table {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: hsl(var(--accent)) transparent; /* For Firefox */
+}
+
+.user-management-table::-webkit-scrollbar {
+  height: 8px; /* Horizontal scrollbar height */
+  background-color: transparent;
+}
+
+.user-management-table::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--accent)); /* Scrollbar thumb color */
+  border-radius: 10px; /* Rounded scrollbar thumb */
+}

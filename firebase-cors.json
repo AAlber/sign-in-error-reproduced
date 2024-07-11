@@ -1,0 +1,21 @@
+[
+    {
+        "origin": [
+            "https://dev.fuxam.app",
+            "https://beta.fuxam.app",
+            "https://fuxam.app",
+            "http://localhost:3000"
+        ],
+        "method": [
+            "GET",
+            "POST"
+        ],
+        "responseHeader": [
+            "Content-Type",
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Methods",
+            "Access-Control-Allow-Headers"
+        ],
+        "maxAgeSeconds": 3600
+    }
+]

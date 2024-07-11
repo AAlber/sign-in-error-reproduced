@@ -1,0 +1,23 @@
+name: End-2-end Tests
+
+on: deployment_status
+
+jobs:
+  e2e_test:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v4
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Cypress E2E
+        uses: cypress-io/github-action@v6
+        with:
+          command: npm run cypress:run
+        env:
+          CYPRESS_BASE_URL: ${{ github.event.deployment_status.environment_url }}
+          HUSKY: 0

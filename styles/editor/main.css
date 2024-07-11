@@ -1,0 +1,13 @@
+.ProseMirror {
+  strong {
+    @apply font-bold;
+  }
+
+  .node-imageUpload, .node-fileUpload, .node-youtubeEmbed {
+    @apply my-6 
+  }
+
+  .uppy-Dashboard-AddFiles-list {
+    @apply !mt-0;
+  }
+}

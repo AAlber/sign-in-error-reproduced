@@ -1,0 +1,70 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "target": "es2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitAny": false,
+    // https://docs.sentry.io/platforms/node/sourcemaps/uploading/typescript
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "src/server/db/client.ts",
+    "src/components/loading-indicator.js",
+    "src/components/loading-spinner.js",
+    "src/components/university-selector.ts",
+    "src/pages/api/token.js",
+    "src/pages/verify/institution/[token].js",
+    "next.config.js",
+    "src/pages/_error.js",
+    "src/pages/api/institutions/index.js",
+    "src/components/popups/settings/institutions.tsx",
+    "src/components/popups/institution-selector/main-frame.js",
+    "src/pages/api/api.ts",
+    "src/pages/onboarding",
+    "src/pages/api/tasks/task-document",
+    "src/components/slate/types.d.ts",
+    "src/components/workbench-deprecated/navigation/menu/menu",
+    "src/components/toaster/example.readme",
+    "playwright/.auth/seed-main.ts",
+    "src/server/functions/translate.js",
+    "translationFunc.js",
+    "src/pages/api/stripe/access-passes"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "public",
+    "src/translations/*.json",
+    "./cypress.config.ts",
+    "cypress"
+  ]
+}

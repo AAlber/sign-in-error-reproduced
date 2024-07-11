@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-7.5 -7.5 225.41 217.42">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none; /* No fill color */
+        stroke: #000; /* White stroke color */
+        stroke-width: 18; /* Thicker stroke width for a more pronounced outline */
+        stroke-linecap: round; /* Round the ends of the stroke */
+        stroke-linejoin: round; /* Round the stroke intersections */
+      }
+    </style>
+  </defs>
+  <g id="Livello_2" data-name="Livello 2">
+    <g id="Livello_1-2" data-name="Livello 1">
+      <!-- Updated path without the details for eyes and nose, just the outline -->
+      <path class="cls-1" d="M190.86,0s-35.32,4.44-56.2,43.94H75.73C54.85,4.44,19.52,0,19.52,0L0,145.16c58.75,20,105.2,57.26,105.2,57.26s46.46-37.28,105.21-57.26Z"/>
+      <!-- Removed the specific paths that represented the eyes and nose to focus on the overall outline -->
+    </g>
+  </g>
+</svg>

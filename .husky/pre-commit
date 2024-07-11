@@ -1,0 +1,106 @@
+# #!/usr/bin/env sh
+# . "$(dirname -- "$0")/_/husky.sh"
+
+# # Increase Node.js heap memory to 4 GB
+# export NODE_OPTIONS="--max-old-space-size=4096"
+
+# set concurrent to false to run `check-types` after eslint
+npx lint-staged --concurrent false
+
+#################################################### RUN TEST ON COMMIT
+
+. "$(dirname -- "$0")/_/husky.sh"
+
+: '
+WHAT DOES THIS SCRIPT DO?
+1. Will validate all types across entire project
+2. If shell can accept user input, prompt user if he wants to skip tests
+3. GIT STASH any uncommitted changes silently so that jest will not include uncommitted changes in its test
+4. If there are failed tests, prompt user if he wants to continue push
+5. If there any stashed changes, do a git stash pop to bring back uncommitted changes
+6. If script was cancelled, do a git stash pop if there were any stashed changes
+'
+
+# Increase Node.js heap memory to 4 GB
+export NODE_OPTIONS="--max-old-space-size=4096"
+
+# Validate types accross entire app
+# npm run check-types
+
+_STASHED=false
+_TEST_FAILED=false
+_ACCEPTS_INPUT=true
+
+pop_stash() {
+  if [[ $_STASHED = true ]]; then
+    echo $'\n\n🔴 Test aborted\n'
+    echo $'🟢 Popping the stash!\n'
+    git stash pop >/dev/null
+    exit 1
+  fi
+}
+
+# the script to run
+run_tests() {
+
+  if [[ $_ACCEPTS_INPUT = true ]]; then
+    # Do you want to skip tests?
+    read -p $'\n\nWant to run our tests? \nYou do not need to do this on every push, but it is mandatory that all tests succeed on your final PR. \nSo make sure to run them on your last push to the branch. Press Y to run the tests, or any other key to skip. (y/n) ' -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      echo $'\n\n🟢 Running tests..\n'
+    else
+      echo $'\n\n🟢 Test Skipped\n'
+      exit 0
+    fi
+  fi
+
+  # stash any uncommitted changes before running the test
+  if ! git diff HEAD --quiet; then
+    echo $'🟢 Stashing any uncommitted changes..\n'
+    git stash --include-untracked >/dev/null
+    _STASHED=true
+    trap "pop_stash" SIGINT SIGTERM
+  fi
+
+  # prompt user to continue push if there are failed tests
+  if ! npm test; then
+
+    if [[ $_ACCEPTS_INPUT = true ]]; then
+      read -p $'\n🔴 Some tests failed. Continue push? (y/n) ' -n 1 -r
+
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo $'\n\n❗️ Pushing with failed tests..\n'
+      else
+        echo $'\n\n🔴 Aborting push..\n'
+        _TEST_FAILED=true
+      fi
+
+    else
+      exit 1
+    fi
+
+  fi
+
+  # just pop the stash if there were uncommitted changes earlier
+  if [[ $_STASHED = true ]]; then
+    echo $'🟢 Popping the stash!\n'
+    git stash pop >/dev/null
+  fi
+
+  # exit with error, tells husky to cancel push
+  if [[ $_TEST_FAILED = true ]]; then
+    exit 1
+  fi
+}
+
+: '
+First we check if shell can accept prompts/user input.
+We check if git push was initiated by GUI - SYNC CHANGES button
+If true then shell cannot accept user prompt, we continue with test and 
+and abort push if there is a failing test
+'
+if ! exec </dev/tty; then
+  _ACCEPTS_INPUT=false
+fi
+
+run_tests

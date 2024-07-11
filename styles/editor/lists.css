@@ -1,0 +1,24 @@
+.ProseMirror {
+  ol {
+    @apply list-decimal;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  ul,
+  ol {
+    @apply py-0 px-4;
+
+    ul,
+    ol,
+    li {
+      @apply my-1;
+    }
+
+    p {
+      @apply mt-0 mb-1;
+    }
+  }
+}

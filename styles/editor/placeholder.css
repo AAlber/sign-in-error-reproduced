@@ -1,0 +1,65 @@
+.ProseMirror {
+  /* Placeholder Styles */
+  .is-empty::before {
+    @apply text-muted float-left h-0 pointer-events-none w-full;
+  }
+
+  /* Default Placeholder */
+  & > .is-editor-empty:first-child:before {
+    content: attr(data-placeholder);
+  }
+
+  > p.has-focus.is-empty::before, 
+    h1.is-empty::before, 
+    h2.is-empty::before, 
+    h3.is-empty::before {
+    content: attr(data-placeholder);
+  }
+
+  /* Blockquote Placeholder */
+  blockquote .is-empty:not(.is-editor-empty):first-child:last-child::before {
+    content: attr(data-placeholder);
+  }
+
+  blockquote + figcaption.is-empty:not(.is-editor-empty)::before {
+    content: attr(data-placeholder);
+  }
+
+  ul, ol {
+    li > p.has-focus.is-empty::before {
+        content: attr(data-placeholder);
+    }
+  }
+
+  [data-placeholder][data-suggestion]::before,
+  [data-placeholder][data-suggestion] *::before {
+    content: none !important;
+  }
+}
+
+.appointment-notes-editor {
+  /* Default Placeholder */
+  & > .has-focus.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+  }
+
+  > p.has-focus.is-empty::before, 
+    h1.is-empty::before, 
+    h2.is-empty::before, 
+    h3.is-empty::before,
+    blockquote.is-empty::before,
+    blockquote + figcaption.is-empty::before {
+    content: none;
+  }
+
+  ul, ol {
+    li > p.has-focus.is-empty::before {
+        content: none;
+    }
+  }
+
+  [data-placeholder][data-suggestion]::before,
+  [data-placeholder][data-suggestion] *::before {
+    content: none !important;
+  }
+}

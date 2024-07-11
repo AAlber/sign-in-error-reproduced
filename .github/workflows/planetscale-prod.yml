@@ -1,0 +1,26 @@
+name: 'Production Fuxam Database Deployment'
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:  
+      - main
+    types: [closed]
+
+jobs:
+  api_tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    env:
+      DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: 'npm'
+      - run: npm config set arch x64
+      - run: npm config set os linux
+      - run: npm install
+      - run: npm run prisma db push

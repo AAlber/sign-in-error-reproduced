@@ -1,0 +1,1107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id                              String                           @id @default(cuid())
+  name                            String
+  email                           String                           @unique
+  password                        String?                          @db.Text
+  emailVerified                   DateTime?
+  image                           String?                          @db.LongText
+  language                        String                           @default("en")
+  currentInstitution              String?
+  memberSince                     DateTime                         @default(now())
+  stripeAccountId                 String?                          @unique
+  institution                     Institution?                     @relation(fields: [currentInstitution], references: [id])
+  tasks                           TaskUserDocument[]
+  overwrittenCourseUserStatus     OverwrittenCourseUserStatus[]
+  handIns                         HandInUserDocument[]
+  roles                           Role[]
+  learnings                       LearningProcess[]
+  CourseFeedback                  CourseFeedback[]
+  CourseContentBlockFeedback      CourseContentBlockFeedback[]
+  accessPassUsageLogs             AccessPassUsageLog[]
+  appointmentAttendenceLogs       AppointmentAttendenceLog[]
+  ratings                         ContentBlockRating[]
+  accessPassTokens                AccessPassToken[]
+  institutionUserData             InstitutionUserDataFieldValue[]
+  invites                         Invite[]
+  organizer                       AppointmentOrganizer[]
+  contentBlockFeedbacks           ContentBlockFeedback[]
+  contentBlockUserStatus          ContentBlockUserStatus[]
+  contentBlockUserGradings        ContentBlockUserGrading[]
+  peerFeedback                    PeerFeedback[]                   @relation("PeerFeedbackUser")
+  peerFeedbackReviewer            PeerFeedback[]                   @relation("PeerFeedbackReviewer")
+  InstitutionUserGroupMembership  InstitutionUserGroupMembership[]
+  userAppointmentInvitationEmails UserAppointmentInvitationEmail[]
+  userNotes                       UserNotes[]
+  appointmentUsers                AppointmentUser[]
+  createdAppointments             AppointmentCreator[]
+
+  @@index([currentInstitution])
+  @@index([email])
+  @@index([name])
+}
+
+model UserNotes {
+  id            String      @id @default(cuid())
+  userId        String
+  institutionId String
+  data          Json
+  noteName      String      @default("")
+  creatorName   String      @default("")
+  createdAt     DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id])
+  institution   Institution @relation(fields: [institutionId], references: [id])
+
+  @@index([userId])
+  @@index([institutionId])
+}
+
+model UserNotificationPushToken {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  token     String
+  language  String   @default("en")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([userId])
+}
+
+model PeerFeedback {
+  id         String   @id @default(cuid())
+  userId     String
+  layerId    String
+  text       String?  @db.VarChar(500)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  rating     Int
+  reviewerId String?
+  user       User     @relation("PeerFeedbackUser", fields: [userId], references: [id], onDelete: Cascade)
+  reviewer   User?    @relation("PeerFeedbackReviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+
+  @@index([layerId])
+  @@index([reviewerId])
+  @@index([userId])
+}
+
+model UserStripeAccount {
+  id                 String @id @default(cuid())
+  userId             String
+  customerId         String @unique
+  connectedAccountId String
+
+  @@index([userId])
+}
+
+model Role {
+  id            String      @id @default(cuid())
+  role          String
+  institutionId String
+  layerId       String
+  userId        String
+  active        Boolean     @default(true)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  layer         Layer       @relation(fields: [layerId], references: [id], onDelete: Cascade)
+  institution   Institution @relation(fields: [institutionId], references: [id])
+
+  @@index([userId])
+  @@index([layerId])
+  @@index([institutionId])
+}
+
+model Institution {
+  id                String                    @id @default(cuid())
+  name              String
+  logo              String?                   @db.LongText
+  verified          Boolean                   @default(false)
+  theme             InstitutionTheme          @default(blue)
+  customThemeHEX    String?                   @db.LongText
+  metadata          InstitutionMetadata?
+  users             User[]
+  accessPasses      AccessPass[]
+  layers            Layer[]
+  courses           Course[]
+  roles             Role[]
+  rooms             InstitutionRoom[]
+  group             InstitutionUserGroup[]
+  stripeAccount     InstitutionStripeAccount?
+  invite            Invite[]
+  supportPackage    SupportPackage?
+  settings          InstitutionSettings?
+  MoodleIntegration MoodleIntegration[]
+  userNotes         UserNotes[]
+  r2Objects         InstitutionR2Object[]
+}
+
+model InstitutionMetadata {
+  id              String      @id @default(cuid())
+  institutionId   String      @unique
+  firstAdminEmail String
+  createdAt       DateTime    @default(now())
+  institution     Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@index([institutionId])
+}
+
+model InstitutionUserDataField {
+  id                  String                          @id @default(cuid())
+  name                String
+  institutionId       String
+  showOnStudentIDCard Boolean                         @default(false)
+  collectFromUser     Boolean                         @default(false)
+  values              InstitutionUserDataFieldValue[]
+
+  @@index([institutionId])
+}
+
+model InstitutionUserDataFieldValue {
+  id                       String                   @id @default(cuid())
+  value                    String
+  userId                   String
+  fieldId                  String
+  institutionId            String
+  institutionUserDataField InstitutionUserDataField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  user                     User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([fieldId])
+  @@index([institutionId])
+}
+
+model InstitutionStripeAccount {
+  id                       String                    @id @default(cuid())
+  institutionId            String                    @unique
+  customerId               String?                   @unique
+  subscriptionId           String?                   @unique
+  subscriptionStatus       StripeSubscriptionStatus?
+  connectAccountId         String?                   @unique
+  connectAccountEnabled    Boolean                   @default(false)
+  storageSubscriptionId    String?
+  accessPassCouponId       String?
+  mainSubscriptionCouponId String?
+  supportPackage           SupportPackage?
+  accessPasses             AccessPass[]
+  institution              Institution               @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  paidAddOns               PaidAddOn[]               @relation
+}
+
+model SupportPackage {
+  id                         String                   @id @default(cuid())
+  priceId                    String
+  institutionStripeAccountId String                   @unique
+  institutionId              String                   @unique
+  startDate                  DateTime                 @default(now())
+  stripeAccount              InstitutionStripeAccount @relation(fields: [institutionStripeAccountId], references: [id], onDelete: Cascade)
+  institution                Institution              @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+}
+
+model PaidAddOn {
+  id                         String                    @id @default(cuid())
+  addOnSubscriptionId        String
+  addOnSubscriptionStatus    StripeSubscriptionStatus?
+  addOnPriceId               String
+  institutionStripeAccountId String                    @unique
+  institutionStripeAccount   InstitutionStripeAccount  @relation(fields: [institutionStripeAccountId], references: [id], onDelete: Cascade)
+}
+
+model InstitutionSettings {
+  id            String      @id @default(cuid())
+  settings      Json
+  institutionId String      @unique
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@index([institutionId])
+}
+
+model InstitutionScheduleMonitor {
+  id            String                 @id @default(cuid())
+  institutionId String                 @unique
+  layers        ScheduleMonitorLayer[]
+
+  @@index([institutionId])
+}
+
+model ScheduleMonitorLayer {
+  id            String                     @id @default(cuid())
+  layerId       String
+  institutionId String
+  monitorId     String
+  position      Int
+  monitor       InstitutionScheduleMonitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  layer         Layer                      @relation(fields: [layerId], references: [id], onDelete: Cascade)
+
+  @@index([layerId])
+  @@index([monitorId])
+}
+
+model InstitutionAIUsageStatus {
+  id            String                  @id @default(cuid())
+  institutionId String                  @unique
+  budget        Int                     @default(1000000)
+  logs          InstitutionAIUsageLog[]
+
+  @@index([institutionId])
+}
+
+model InstitutionAIUsageLog {
+  id            String                   @id @default(cuid())
+  institutionId String
+  date          DateTime
+  statusId      String
+  creditsSpent  Int                      @default(1)
+  status        InstitutionAIUsageStatus @relation(fields: [statusId], references: [id], onDelete: Cascade)
+
+  @@index([statusId])
+  @@index([institutionId])
+}
+
+model InstitutionUserGroup {
+  id                    String                           @id @default(cuid())
+  name                  String
+  institutionId         String
+  color                 String                           @default("blue")
+  additionalInformation String                           @default("")
+  institution           Institution                      @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  members               InstitutionUserGroupMembership[]
+  appointmentUserGroups AppointmentUserGroup[]
+
+  @@index([institutionId])
+}
+
+model InstitutionUserGroupMembership {
+  id            String               @id @default(cuid())
+  groupId       String
+  userId        String
+  institutionId String
+  since         DateTime             @default(now())
+  group         InstitutionUserGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user          User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([groupId])
+}
+
+model Layer {
+  id                     String                  @id @default(cuid())
+  name                   String
+  parent_id              String?
+  isCourse               Boolean                 @default(false)
+  institution_id         String
+  end                    DateTime?
+  start                  DateTime?
+  position               Int?
+  displayName            String?
+  isLinkedCourse         Boolean?                @default(false)
+  linkedCourseLayerId    String?
+  isTemplate             Boolean?                @default(false)
+  externalId             String?
+  deletedAt              DateTime?
+  parent                 Layer?                  @relation("OrganisationLayer", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children               Layer[]                 @relation("OrganisationLayer")
+  course                 Course?
+  institution            Institution             @relation(fields: [institution_id], references: [id], onDelete: Cascade)
+  appointmentLayers      AppointmentLayer[]
+  invites                Invite[]
+  tasks                  Task[]
+  roles                  Role[]
+  handIns                HandIn[]
+  learnings              Learning[]
+  CourseFeedback         CourseFeedback[]
+  monitor                ScheduleMonitorLayer[]
+  contentBlocks          ContentBlock[]
+  ContentBlockCourseGoal ContentBlockCourseGoal?
+  linkedCourse           Layer?                  @relation("LinkedCourse", fields: [linkedCourseLayerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  LinkedCourses          Layer[]                 @relation("LinkedCourse")
+
+  @@index([institution_id])
+  @@index([parent_id])
+  @@index([linkedCourseLayerId])
+}
+
+model InstitutionR2Object {
+  id            String      @id @default(cuid())
+  institutionId String
+  size          Int
+  lastModified  DateTime
+  key           String      @db.LongText
+  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+}
+
+model RatingSchema {
+  id             String              @id @default(cuid())
+  name           String              @db.VarChar(100)
+  institutionId  String
+  passPercentage Float               @default(50)
+  default        Boolean             @default(false)
+  values         RatingSchemaValue[]
+}
+
+model RatingSchemaValue {
+  id             String       @id @default(cuid())
+  ratingSchemaId String
+  name           String       @db.VarChar(100)
+  min            Float
+  max            Float
+  ratingSchema   RatingSchema @relation(fields: [ratingSchemaId], references: [id], onDelete: Cascade)
+
+  @@index([ratingSchemaId])
+}
+
+model ContentBlockRating {
+  id            String             @id @default(cuid())
+  ratingLabel   String
+  min           Float
+  max           Float
+  passed        Boolean
+  userId        String
+  blockId       String
+  layerId       String
+  institutionId String
+  schemaName    String
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentBlock  CourseContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([blockId])
+}
+
+model Course {
+  id                String             @id @default(cuid())
+  layer_id          String             @unique
+  name              String
+  icon              String             @default("/illustrations/course-icon-library/book-worm.webp")
+  color             Int
+  dynamicBanner     Boolean            @default(true)
+  institution_id    String
+  description       String?            @db.LongText
+  bannerImage       String?            @db.MediumText
+  iconType          CourseIconType     @default(image)
+  institution       Institution        @relation(fields: [institution_id], references: [id])
+  layer             Layer              @relation(fields: [layer_id], references: [id], onDelete: Cascade)
+  tasks             Task[]
+  appointmentLayers AppointmentLayer[]
+
+  @@index([institution_id])
+  @@index([id])
+}
+
+model CourseGoal {
+  id             String                   @id @default(cuid())
+  layerId        String                   @unique
+  attendanceGoal Int                      @default(0)
+  points         Int                      @default(0)
+  blockGoals     CourseGoalContentBlock[]
+}
+
+model OverwrittenCourseUserStatus {
+  id      String  @id @default(cuid())
+  userId  String
+  passed  Boolean @default(false)
+  layerId String
+  notes   String? @db.LongText
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model CourseGoalContentBlock {
+  id           String             @id @default(cuid())
+  layerId      String
+  blockId      String             @unique
+  contentBlock CourseContentBlock @relation(fields: [blockId], references: [id])
+  courseGoal   CourseGoal         @relation(fields: [layerId], references: [layerId], onDelete: Cascade)
+
+  @@index([layerId])
+}
+
+model CourseContentBlock {
+  id                         String                          @id @default(cuid())
+  name                       String                          @db.VarChar(100)
+  description                String                          @default("") @db.VarChar(500)
+  layerId                    String
+  type                       Int
+  status                     CourseContentBlockStatus        @default(DRAFT)
+  position                   Int?
+  dueDate                    DateTime?
+  startDate                  DateTime?
+  requirements               CourseContentBlockRequirement[] @relation("Block")
+  blocksDependendOnBlock     CourseContentBlockRequirement[] @relation("Requirement")
+  task                       Task?
+  handIn                     HandIn?
+  learning                   Learning?
+  autoLesson                 AutoLesson?
+  courseContentBlockFeedback CourseContentBlockFeedback[]
+  courseGoalContent          CourseGoalContentBlock?
+  ratings                    ContentBlockRating[]
+
+  @@index([layerId])
+}
+
+model CourseContentBlockRequirement {
+  id            String             @id @default(cuid())
+  blockId       String
+  layerId       String
+  requirementId String
+  block         CourseContentBlock @relation("Block", fields: [blockId], references: [id], onDelete: Cascade)
+  requirement   CourseContentBlock @relation("Requirement", fields: [requirementId], references: [id], onDelete: Cascade)
+
+  @@index([blockId])
+  @@index([requirementId])
+}
+
+model CourseContentBlockFeedback {
+  id        String             @id @default(cuid())
+  blockId   String
+  userId    String?
+  text      String?            @db.VarChar(500)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @default(now()) @updatedAt
+  rating    Int
+  block     CourseContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  user      User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([blockId])
+  @@index([userId])
+}
+
+model Task {
+  id       String             @id @unique @default(cuid())
+  content  String             @db.LongText
+  layerId  String
+  blockId  String             @unique
+  status   Int                @default(0)
+  layer    Layer              @relation(fields: [layerId], references: [id], onDelete: Cascade)
+  course   Course?            @relation(fields: [layerId], references: [layer_id], onDelete: Cascade, map: "course_task_layerId_fkey")
+  block    CourseContentBlock @relation(fields: [blockId], references: [id])
+  userData TaskUserDocument[]
+
+  @@index([layerId])
+  @@index([blockId])
+}
+
+model Learning {
+  id      String             @id @default(cuid())
+  layerId String
+  blockId String             @unique
+  url     String             @db.LongText
+  secure  Boolean            @default(false)
+  content String             @db.LongText
+  isFile  Boolean            @default(false)
+  layer   Layer              @relation(fields: [layerId], references: [id], onDelete: Cascade)
+  block   CourseContentBlock @relation(fields: [blockId], references: [id])
+  process LearningProcess[]
+
+  @@index([layerId])
+  @@index([blockId])
+}
+
+model LearningProcess {
+  id         String   @id @default(cuid())
+  userId     String
+  learningId String
+  content    String   @db.LongText
+  learning   Learning @relation(fields: [learningId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([learningId])
+}
+
+model HandIn {
+  id                String               @id @default(cuid())
+  layerId           String
+  blockId           String               @unique
+  maxSize           Int                  @default(10)
+  forbiddenFileType String               @default("")
+  hasEnded          Boolean              @default(false)
+  layer             Layer                @relation(fields: [layerId], references: [id], onDelete: Cascade)
+  block             CourseContentBlock   @relation(fields: [blockId], references: [id])
+  userData          HandInUserDocument[]
+
+  @@index([layerId])
+  @@index([blockId])
+}
+
+model AutoLesson {
+  id               String             @id @default(cuid())
+  layerId          String
+  blockId          String             @unique
+  showOriginalFile Boolean            @default(true)
+  fileUrl          String?            @db.LongText
+  topic            String             @default("")
+  chats            AutoLessonChat[]
+  block            CourseContentBlock @relation(fields: [blockId], references: [id])
+}
+
+model AutoLessonChat {
+  id           String     @id @default(cuid())
+  autoLessonId String
+  userId       String
+  content      Json
+  autoLesson   AutoLesson @relation(fields: [autoLessonId], references: [id], onDelete: Cascade)
+
+  @@index([autoLessonId])
+  @@index([userId])
+}
+
+model HandInUserDocument {
+  id        String   @id @default(cuid())
+  handInId  String
+  userId    String
+  url       String   @db.VarChar(500)
+  createdAt DateTime @default(now())
+  handIn    HandIn   @relation(fields: [handInId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([handInId])
+  @@index([userId])
+}
+
+model TaskUserDocument {
+  id      String @id @default(cuid())
+  taskId  String
+  userId  String
+  status  Int    @default(0)
+  content String @db.LongText
+  task    Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([userId])
+}
+
+model Appointment {
+  id                    String                     @id @default(cuid())
+  dateTime              DateTime
+  title                 String
+  isOnline              Boolean                    @default(true)
+  duration              Int
+  address               String                     @db.Text
+  location              String?
+  roomId                String?
+  seriesId              String?
+  provider              String                     @db.Text
+  isHybrid              Boolean                    @default(false)
+  onlineAddress         String                     @default("")
+  notes                 String                     @default("")
+  series                AppointmentSeries?         @relation(fields: [seriesId], references: [id], onDelete: SetNull)
+  room                  InstitutionRoom?           @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  attendenceLogs        AppointmentAttendenceLog[]
+  attendenceKey         AppointmentAttendenceKey?
+  appointmentLayers     AppointmentLayer[]
+  appointmentUsers      AppointmentUser[]
+  appointmentUserGroups AppointmentUserGroup[]
+  organizerUsers        AppointmentOrganizer[]
+  appointmentCreator    AppointmentCreator?        @relation
+
+  @@index([roomId])
+  @@index([seriesId])
+}
+
+model UserAppointmentInvitationEmail {
+  id     String @id @default(cuid())
+  userId String
+  email  String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model ScheduleUserFilter {
+  id       String @id @default(cuid())
+  userId   String
+  layerIds String @db.MediumText
+  name     String @db.MediumText
+}
+
+model AppointmentOrganizer {
+  id            String      @id @default(cuid())
+  organizerId   String
+  appointmentId String
+  institutionId String?
+  organizer     User        @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@index([organizerId])
+  @@index([appointmentId])
+}
+
+model AppointmentLayer {
+  id            String      @id @default(cuid())
+  layerId       String
+  appointmentId String
+  layer         Layer       @relation(fields: [layerId], references: [id], onDelete: Cascade)
+  course        Course?     @relation(fields: [layerId], references: [layer_id], map: "course_appointment_layerId_fkey")
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@index([layerId])
+  @@index([appointmentId])
+}
+
+model AppointmentUserGroup {
+  id            String               @id @default(cuid())
+  userGroupId   String
+  appointmentId String
+  userGroup     InstitutionUserGroup @relation(fields: [userGroupId], references: [id], onDelete: Cascade)
+  appointment   Appointment          @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@index([userGroupId])
+  @@index([appointmentId])
+}
+
+model AppointmentUser {
+  id            String      @id @default(cuid())
+  userId        String
+  appointmentId String
+  institutionId String?
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([appointmentId])
+}
+
+model AppointmentCreator {
+  id            String      @id @default(cuid())
+  userId        String
+  appointmentId String      @unique
+  institutionId String?
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([appointmentId])
+}
+
+model AppointmentSeries {
+  id           String        @id @default(cuid())
+  rrule        String
+  appointments Appointment[]
+}
+
+model AppointmentAttendenceKey {
+  id                 String                               @id @default(cuid())
+  key                String                               @unique @default(cuid())
+  appointmentId      String                               @unique
+  expireAfterMinutes Int                                  @default(30)
+  validity           AppointmentAttendanceKeyValidityEnum @default(WHOLE_DAY)
+  appointment        Appointment                          @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+
+  @@index([key])
+}
+
+model AppointmentAttendenceLog {
+  id              String      @id @default(cuid())
+  appointmentId   String
+  userId          String
+  attended        Boolean     @default(false)
+  attendingType   String      @default("")
+  firstAttendedAt DateTime?
+  appointment     Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([appointmentId])
+  @@index([userId])
+}
+
+model Invite {
+  id             String      @id @default(cuid())
+  createdAt      DateTime    @default(now())
+  target         String
+  token          String
+  institution_id String
+  validFor24h    Boolean     @default(false)
+  role           String      @default("member")
+  accessPassId   String?     @unique
+  email          String?
+  hasBeenUsed    Boolean     @default(false)
+  institution    Institution @relation(fields: [institution_id], references: [id])
+  layer          Layer       @relation(fields: [target], references: [id], onDelete: Cascade)
+  accessPass     AccessPass? @relation(fields: [accessPassId], references: [id])
+  user           User?       @relation(fields: [email], references: [email])
+
+  @@index([email])
+  @@index([target])
+  @@index([institution_id])
+}
+
+model AccessPass {
+  id                      String                   @id @default(cuid())
+  createdAt               DateTime                 @default(now())
+  inviteId                String?                  @unique
+  stripeAccountId         String
+  stripePriceId           String
+  subscriptionId          String?                  @unique
+  institutionId           String
+  maxUsers                Int?
+  status                  StripeSubscriptionStatus @default(incomplete)
+  endDate                 Int?
+  accessPassPaymentInfoId String?                  @unique
+  isPaid                  Boolean                  @default(false)
+  layerId                 String
+  accessPassPaymentInfo   AccessPassPaymentInfo?   @relation(fields: [accessPassPaymentInfoId], references: [id], onDelete: Cascade)
+  usageLogs               AccessPassUsageLog[]
+  invite                  Invite?
+  institution             Institution              @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  stripeAccount           InstitutionStripeAccount @relation(fields: [stripeAccountId], references: [id], onDelete: Cascade)
+
+  @@index([subscriptionId])
+  @@index([inviteId])
+  @@index([stripeAccountId])
+}
+
+model AccessPassPaymentInfo {
+  id               String            @id @default(cuid())
+  createdAt        DateTime          @default(now())
+  stripePriceId    String
+  currency         String            @default("usd")
+  unitAmount       Int
+  accessPassId     String?           @unique
+  taxRateId        String
+  productId        String
+  description      String
+  name             String?
+  accessPassTokens AccessPassToken[]
+  accessPass       AccessPass?
+}
+
+model AccessPassToken {
+  id                      String                @id @default(cuid())
+  accessPassPaymentInfoId String
+  userId                  String
+  user                    User                  @relation(fields: [userId], references: [id])
+  accessPassPaymentInfo   AccessPassPaymentInfo @relation(fields: [accessPassPaymentInfoId], references: [id])
+}
+
+model AccessPassUsageLog {
+  id             String     @id @default(cuid())
+  userId         String
+  accessPassId   String
+  idempotencyKey String     @unique
+  createdAt      DateTime   @default(now())
+  accessPass     AccessPass @relation(fields: [accessPassId], references: [id], onDelete: Cascade)
+  user           User       @relation(fields: [userId], references: [id])
+
+  @@index([accessPassId])
+  @@index([userId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  data      Json
+  createdAt DateTime @default(now())
+  read      Boolean  @default(false)
+}
+
+model CourseFeedback {
+  id        String             @id @default(cuid())
+  text      String             @db.VarChar(500)
+  userId    String?
+  layerId   String
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @default(now()) @updatedAt
+  score     FeedbackRatingEnum
+  user      User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  layer     Layer              @relation(fields: [layerId], references: [id], onDelete: Cascade)
+
+  @@index([layerId])
+  @@index([userId])
+}
+
+model InstitutionRoom {
+  id             String        @id @default(cuid())
+  name           String
+  institutionId  String
+  personCapacity Int
+  address        String
+  amenities      String?       @db.LongText
+  addressNotes   String        @default("")
+  appointments   Appointment[]
+  institution    Institution   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@index([institutionId])
+}
+
+model StripeLog {
+  id               String   @id @unique
+  api_version      String?
+  data             Json
+  request          Json?
+  type             String
+  object           String
+  account          String?
+  created          DateTime
+  livemode         Boolean
+  pending_webhooks Int
+}
+
+model ContentBlock {
+  id           String                    @id @default(cuid())
+  name         String                    @db.VarChar(100)
+  description  String                    @default("") @db.VarChar(500)
+  layerId      String
+  type         String
+  status       ContentBlockStatus        @default(DRAFT)
+  position     Int?                      @default(999) @db.SmallInt
+  dueDate      DateTime?
+  startDate    DateTime?
+  specs        Json
+  courseGoalId String?
+  createdAt    DateTime                  @default(now())
+  requiredBy   ContentBlock[]            @relation("ContentBlockRequirements")
+  requirements ContentBlock[]            @relation("ContentBlockRequirements")
+  feedbacks    ContentBlockFeedback[]
+  gradings     ContentBlockUserGrading[]
+  courseGoal   ContentBlockCourseGoal?   @relation(fields: [courseGoalId], references: [id], onDelete: SetNull)
+  layer        Layer                     @relation(fields: [layerId], references: [id], onDelete: Cascade)
+  userStatus   ContentBlockUserStatus[]
+
+  @@index([layerId])
+  @@index([courseGoalId])
+  @@index([id, position])
+}
+
+model ContentBlockCourseGoal {
+  id             String         @id @default(cuid())
+  layerId        String         @unique
+  attendanceGoal Int            @default(0)
+  points         Int            @default(0)
+  blockGoals     ContentBlock[]
+  layer          Layer          @relation(fields: [layerId], references: [id], onDelete: Cascade)
+}
+
+model ContentBlockUserGrading {
+  id            String        @id @default(cuid())
+  ratingLabel   String
+  min           Float
+  max           Float
+  passed        Boolean
+  userId        String
+  blockId       String
+  layerId       String
+  institutionId String
+  schemaName    String
+  text          String?       @default("") @db.VarChar(500)
+  graderUserId  String?       @default("")
+  block         ContentBlock? @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([blockId])
+}
+
+model ContentBlockFeedback {
+  id        String       @id @default(cuid())
+  blockId   String
+  userId    String
+  text      String?      @db.VarChar(500)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @default(now()) @updatedAt
+  rating    Int
+  block     ContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([blockId])
+  @@index([userId])
+}
+
+model ContentBlockUserStatus {
+  id           String       @id @default(cuid())
+  userId       String
+  layerId      String
+  blockId      String
+  status       UserStatus   @default(NOT_STARTED)
+  data         Json
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentBlock ContentBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([blockId])
+}
+
+model ContentBlockRequirements {
+  A String
+  B String
+
+  @@unique([A, B], map: "_ContentBlockRequirements_AB_unique")
+  @@index([B], map: "_ContentBlockRequirements_B_index")
+  @@map("_ContentBlockRequirements")
+}
+
+model TemplateLayer {
+  id                   String  @id
+  name                 String
+  institutionId        String
+  layerId              String
+  includeUsers         Boolean @default(false)
+  includeAppointments  Boolean @default(false)
+  includeContentBlocks Boolean @default(false)
+  includeCourseGoals   Boolean @default(false)
+  metadata             Json?
+
+  @@index([institutionId])
+  @@index([layerId])
+}
+
+model MoodleIntegration {
+  institutionId String      @id @map("institutionId")
+  apiKey        String
+  siteUrl       String
+  data          Json?
+  Institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@index([institutionId])
+}
+
+model Catalog {
+  id            String   @id
+  createdAt     DateTime @default(now())
+  name          String
+  institutionId String
+
+  @@index([institutionId])
+}
+
+model CatalogTerm {
+  id          String    @id
+  createdAt   DateTime  @default(now())
+  name        String
+  description String?   @db.LongText
+  catalogId   String
+  endDate     DateTime?
+  startDate   DateTime?
+
+  @@index([catalogId])
+}
+
+model CatalogTermModule {
+  id                String                       @id
+  createdAt         DateTime                     @default(now())
+  name              String
+  description       String?                      @db.LongText
+  customDescription Json?
+  code              String?
+  prerequisities    String?
+  language          String?
+  moduleType        CatalogTermModule_moduleType @default(COMPULSORY)
+  catalogTermId     String
+  ectsPoints        Int                          @default(1)
+
+  @@index([catalogTermId])
+}
+
+model WorkbenchElement {
+  id     String @id
+  type   String
+  data   Json
+  pageId String
+
+  @@index([pageId])
+}
+
+model WorkbenchElementUserData {
+  id        String @id
+  elementId String
+  userId    String
+  data      Json
+
+  @@index([elementId])
+  @@index([userId])
+}
+
+model WorkbenchFile {
+  id        String   @id
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model WorkbenchPage {
+  id          String @id
+  workbenchId String
+
+  @@index([workbenchId])
+}
+
+enum CourseIconType {
+  emoji
+  image
+}
+
+enum AppointmentAttendanceKeyValidityEnum {
+  EVENT_DURATION
+  WHOLE_DAY
+  H1_BEFORE_AFTER
+  ROTATING_QR
+}
+
+enum CourseContentBlockStatus {
+  PUBLISHED
+  COMING_SOON
+  DRAFT
+  DISABLED
+}
+
+enum StripeSubscriptionStatus {
+  incomplete
+  incomplete_expired
+  trialing
+  active
+  past_due
+  canceled
+  unpaid
+  paused
+}
+
+enum FeedbackRatingEnum {
+  VERY_POOR
+  BELOW_AVERAGE
+  AVERAGE
+  ABOVE_AVERAGE
+  EXCELLENT
+}
+
+enum InstitutionTheme {
+  zinc
+  slate
+  stone
+  gray
+  classic
+  red
+  rose
+  orange
+  green
+  blue
+  yellow
+  violet
+  custom
+}
+
+enum UserStatus {
+  IN_PROGRESS
+  NOT_STARTED
+  FINISHED
+  REVIEWED
+}
+
+enum ContentBlockStatus {
+  PUBLISHED
+  COMING_SOON
+  DRAFT
+  DISABLED
+}
+
+enum CatalogTermModule_moduleType {
+  COMPULSORY
+  ELECTIVE
+}

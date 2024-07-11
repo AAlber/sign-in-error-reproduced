@@ -1,0 +1,99 @@
+name: Fuxam Tests
+
+on:
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  fuxam_test:
+    runs-on: ubuntu-latest
+    env:
+      ADMIN_DASH_IDS: ${{ secrets.ADMIN_DASH_IDS }}
+      ADMIN_DASH_PASSWORD: ${{ secrets.ADMIN_DASH_PASSWORD }}
+      ANALYZE: ${{ secrets.ANALYZE }}
+      BIRDEATSBUG_ID: ${{ secrets.BIRDEATSBUG_ID }}
+      CLERK_API_KEY: ${{ secrets.CLERK_API_KEY }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+      CLERK_WEBHOOK_USER_UPDATE: ${{ secrets.CLERK_WEBHOOK_USER_UPDATE }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DOPPLER_CONFIG: ${{ secrets.DOPPLER_CONFIG }}
+      DOPPLER_ENVIRONMENT: ${{ secrets.DOPPLER_ENVIRONMENT }}
+      DOPPLER_PROJECT: ${{ secrets.DOPPLER_PROJECT }}
+      EDGE_CONFIG: ${{ secrets.EDGE_CONFIG }}
+      FHS_SECRET: ${{ secrets.FHS_SECRET }}
+      FUXAM_SECRET: ${{ secrets.FUXAM_SECRET }}
+      GIPHY_API_KEY: ${{ secrets.GIPHY_API_KEY }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+      GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+      NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: ${{ secrets.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL }}
+      NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_UR: ${{ secrets.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_UR }}
+      NEXT_PUBLIC_CLERK_FRONTEND_API: ${{ secrets.NEXT_PUBLIC_CLERK_FRONTEND_API }}
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      NEXT_PUBLIC_CLERK_SIGN_IN_URL: ${{ secrets.NEXT_PUBLIC_CLERK_SIGN_IN_URL }}
+      NEXT_PUBLIC_CLERK_SIGN_UP_URL: ${{ secrets.NEXT_PUBLIC_CLERK_SIGN_UP_URL }}
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+      NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
+      NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+      NEXT_PUBLIC_FIREBASE_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_SENDER_ID }}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+      NEXT_PUBLIC_GOOGLE_UPLOAD: ${{ secrets.NEXT_PUBLIC_GOOGLE_UPLOAD }}
+      NEXT_PUBLIC_INTERCOM_APP_ID: ${{ secrets.NEXT_PUBLIC_INTERCOM_APP_ID }}
+      NEXT_PUBLIC_SERVER_URL: ${{ secrets.NEXT_PUBLIC_SERVER_URL }}
+      NEXT_PUBLIC_STREAM_API_KEY: ${{ secrets.NEXT_PUBLIC_STREAM_API_KEY }}
+      NEXT_PUBLIC_STREAM_APP_ID: ${{ secrets.NEXT_PUBLIC_STREAM_APP_ID }}
+      NEXT_PUBLIC_STRIPE_PK: ${{ secrets.NEXT_PUBLIC_STRIPE_PK }}
+      NEXT_PUBLIC_WORKER_URL: ${{ secrets.NEXT_PUBLIC_WORKER_URL }}
+      NODE_ENV: ${{ secrets.NODE_ENV }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+      R2_AUTH_KEY_SECRET: ${{ secrets.R2_AUTH_KEY_SECRET }}
+      REDIS_TOKEN: ${{ secrets.REDIS_TOKEN }}
+      REDIS_URL: ${{ secrets.REDIS_URL }}
+      SENTRY_IGNORE_API_RESOLUTION_ERROR: ${{ secrets.SENTRY_IGNORE_API_RESOLUTION_ERROR }}
+      SENTRY_LOG_LEVEL: ${{ secrets.SENTRY_LOG_LEVEL }}
+      SERVER_URL: ${{ secrets.SERVER_URL }}
+      SG_API_KEY: ${{ secrets.SG_API_KEY }}
+      STREAM_API_KEY: ${{ secrets.STREAM_API_KEY }}
+      STREAM_API_SECRET: ${{ secrets.STREAM_API_SECRET }}
+      STREAM_APP_ID: ${{ secrets.STREAM_APP_ID }}
+      STRIPE_CHATGPT_PRICE_ID: ${{ secrets.STRIPE_CHATGPT_PRICE_ID }}
+      STRIPE_PRICE_ID: ${{ secrets.STRIPE_PRICE_ID }}
+      STRIPE_SK: ${{ secrets.STRIPE_SK }}
+      STRIPE_WEBHOOK_CONNECT_ACCOUNTS_SECRET: ${{ secrets.STRIPE_WEBHOOK_CONNECT_ACCOUNTS_SECRET }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+      UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+      - run: npm ci
+      - run: npm run test:ci | tee ./coverage.txt && exit ${PIPESTATUS[0]}
+
+      - name: Test Reporter
+        uses: dorny/test-reporter@v1.6.0
+        if: always()
+        with:
+          name: Fuxam Jest Tests
+          path: junit.xml
+          reporter: jest-junit
+          fail-on-error: true
+
+      - name: Code Coverage Report
+        uses: MishaKav/jest-coverage-comment@main
+        with:
+          coverage-summary-path: ./coverage/coverage-summary.json
+          title: Code Coverage
+          summary-title: Coverage Summary
+          badge-title: Coverage
+          hide-comment: false
+          create-new-comment: false
+          hide-summary: true
+          report-only-changed-files: true
+          junitxml-title: Junit Summary
+          junitxml-path: ./junit.xml
+          coverage-title: Coverage Report
+          coverage-path: ./coverage.txt

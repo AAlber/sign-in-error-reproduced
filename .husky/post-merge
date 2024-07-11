@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+. "$(dirname "$0")/_/husky.sh"
+
+: '
+WHAT DOES THIS SCRIPT DO?
+On a branch pull, automatically execute npm install if there are any changes to package-lock.json, 
+to potentially resolve issues with broken tests and broken local builds.
+
+run following command to test this script:
+
+git reset --hard HEAD~20 && git pull
+(reset the current local branch to a previous state (e.g. rewind 20 commits) and then pull the changes back)
+'
+
+# Get the package-lock.json file if it's among the changed files
+PACKAGE_LOCK=$(git diff --name-only HEAD@{1} HEAD | grep -E "package-lock.json" || true)
+
+if [[ -n "$PACKAGE_LOCK" ]]; then
+  echo "📦 $PACKAGE_LOCK was changed. Running npm install to update your dependencies..."
+
+  # Calculate the directory containing the package-lock.json
+  DIR=$(dirname "$PACKAGE_LOCK")
+
+  # Change to that directory and run npm install
+  if cd "$DIR"; then
+    npm install
+  else
+    echo "Error: Failed to change directory to $DIR"
+    exit 1
+  fi
+else
+  echo "📦 No new dependencies added"
+fi
