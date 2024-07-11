@@ -1,7 +1,6 @@
 import Autoplay from "embla-carousel-autoplay";
 import React, { useEffect } from "react";
 import type { InfoSliderProps } from "@/src/types/progress-screen";
-import { log } from "@/src/utils/logger/logger";
 import { Carousel, CarouselContent } from "../../shadcn-ui/carousel";
 import { useMousePosition } from "../hooks";
 import { useProgressScreenStore } from "../zustand";
@@ -23,10 +22,10 @@ export const InfoSlider = (props: InfoSliderProps) => {
     }
 
     const onSelect = () => {
-      log.info(
-        "Process screen slide changes to",
-        carouselApi.selectedScrollSnap(),
-      );
+      // log.info(
+      //   "Process screen slide changes to",
+      //   carouselApi.selectedScrollSnap(),
+      // );
       setCount(carouselApi.scrollSnapList().length);
       setCurrentScreen(carouselApi.selectedScrollSnap() + 1);
     };
